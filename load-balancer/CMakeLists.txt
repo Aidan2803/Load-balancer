@@ -3,10 +3,14 @@ project(Load-Balancer)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+
 set(SOURCES
     src/main.cpp
     src/load-balancer.cpp
     src/SocketWrapper.cpp
+    src/client-com-handler.cpp
+    src/server-com-handler.cpp
 )
 
 add_executable(load_balancer ${SOURCES})
+target_compile_options(load_balancer PRIVATE -Werror -Wall -Wextra -Wpedantic)

@@ -1,3 +1,6 @@
+#ifndef SOCKET_WRAPPER_HPP
+#define SOCKET_WRAPPER_HPP
+
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -28,3 +31,5 @@ public:
 private:
   int fd_{-1};
 };
+
+#endif

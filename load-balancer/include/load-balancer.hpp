@@ -1,10 +1,14 @@
+#ifndef LOAD_BALANCER
+#define LOAD_BALANCER
+
 #include <iostream>
 #include <exception>
 #include <vector>
 #include <memory>
 
 #include "SocketWrapper.hpp"
-
+#include "server-com-handler.hpp"
+#include "client-com-handler.hpp"
 
 class LoadBalancerServer{
     public:
@@ -13,14 +17,6 @@ class LoadBalancerServer{
     private:
     void StartLBServer();
     void ServerLoop();
-
-    SocketWrapper&& AcceptClient() const;
-    char* RecieveRequestFromClient(SocketWrapper&& client_socket_wrapper) const;
-    SocketWrapper EstablishConnectionWithRemoteServer();
-    void SendRequestToRemoteServer() const;
-    std::string ReceiveResponseFromRemoteServer() const;
-    void SendResponseToClient() const;
-
 
     void GetServersInfo(); // TODO: to be implemeted
 
@@ -31,5 +27,9 @@ class LoadBalancerServer{
 
     const char* port_{"8090"};
 
-    std::unique_ptr<SocketWrapper> server_socket_;
+    std::unique_ptr<SocketWrapper> load_balancer_socket_wrapper_;
+    ServerComHandler server_com_handler_;
+    ClientComHandler client_com_handler_;
 };
+
+#endif
