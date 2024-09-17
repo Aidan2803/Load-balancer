@@ -12,24 +12,24 @@
 #include <cstring>
 
 class SocketWrapper {
-public:
-  explicit SocketWrapper(int fd);
+  public:
+    explicit SocketWrapper(int fd);
 
-  SocketWrapper(int domain, int type, int protocol);
+    SocketWrapper(int domain, int type, int protocol);
 
-  SocketWrapper(SocketWrapper&& other) noexcept;
+    SocketWrapper(SocketWrapper&& other) noexcept;
 
-  SocketWrapper& operator=(SocketWrapper&& other) noexcept;
+    SocketWrapper& operator=(SocketWrapper&& other) noexcept;
 
-  SocketWrapper(const SocketWrapper&) = delete;
-  SocketWrapper& operator=(const SocketWrapper&) = delete;
+    SocketWrapper(const SocketWrapper&) = delete;
+    SocketWrapper& operator=(const SocketWrapper&) = delete;
 
-  int GetSocketFileDescriptor() const;
+    int GetSocketFileDescriptor() const;
 
-  ~SocketWrapper();
+    ~SocketWrapper();
 
-private:
-  int fd_{-1};
+  private:
+    int fd_{-1};
 };
 
 #endif

@@ -6,7 +6,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 set(SOURCES
     src/main.cpp
-    src/load-balancer.cpp
+    src/load-balancer-interface.cpp
+    src/load-balancer-pseudo.cpp
     src/SocketWrapper.cpp
     src/client-com-handler.cpp
     src/server-com-handler.cpp

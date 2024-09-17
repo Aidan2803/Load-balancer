@@ -1,9 +1,24 @@
-#include "load-balancer.hpp"
+#include "load-balancer-pseudo.hpp"
+
+
 
 int main() {
     try {
-        LoadBalancerServer lb{};
-        lb.LoadBalancerProcess();        
+        std::unique_ptr<LoadBalancerServerInterface> load_balancer;
+        // TODO: after JSON parser will be created, switch shall take decision based on the user input in a json file
+        // TODO: after JSON parser will be implemented remove this dummy variable
+        int lb_type = 0;
+        switch (lb_type)
+        {
+        case 0:
+            load_balancer = std::make_unique<LoadBalancerServerPseudo>();
+            break;
+        
+        default:
+            break;
+        }
+
+        load_balancer.get()->LoadBalancing();   
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;
         return EXIT_FAILURE;

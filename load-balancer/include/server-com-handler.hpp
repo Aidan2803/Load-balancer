@@ -2,20 +2,21 @@
 #define SERVER_COM_HANDLER_HPP
 
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "SocketWrapper.hpp"
+#include "server-info.hpp"
 
-class ServerComHandler{
-    public:
+class ServerComHandler {
+  public:
     ServerComHandler();
     ~ServerComHandler();
-    void EstablishConnectionWithRemoteServer(std::pair<const char*, const char*> server);
+    void EstablishConnectionWithRemoteServer(ServerInfo &server);
     void SendRequestToRemoteServer(std::string &request_buffer) const;
     std::string ReceiveResponseFromRemoteServer() const;
-    
-    private:
+
+  private:
     std::unique_ptr<SocketWrapper> server_socket_wrapper_;
 };
 
