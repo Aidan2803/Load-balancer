@@ -2,7 +2,9 @@
 #define SERVER_COM_HANDLER_HPP
 
 #include <iostream>
+#include <map>
 #include <memory>
+#include <optional>
 #include <string>
 
 #include "SocketWrapper.hpp"
@@ -13,11 +15,18 @@ class ServerComHandler {
     ServerComHandler();
     ~ServerComHandler();
     void EstablishConnectionWithRemoteServer(ServerInfo &server);
-    void SendRequestToRemoteServer(std::string &request_buffer) const;
-    std::string ReceiveResponseFromRemoteServer() const;
+    void SendRequestToRemoteServer(ServerInfo &server, std::string &request_buffer);
+    std::string ReceiveResponseFromRemoteServer(ServerInfo &server);
 
   private:
-    std::unique_ptr<SocketWrapper> server_socket_wrapper_;
+    std::string GetIpPortKeyFormat(const std::string &ip, const std::string &port) const;
+    std::optional<std::map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
+        const std::string &ip, const std::string &port);
+    std::optional<std::map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
+        std::string &ipport_key);
+
+  private:
+    std::map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
 };
 
 #endif

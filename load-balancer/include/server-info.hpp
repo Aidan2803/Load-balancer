@@ -2,10 +2,10 @@
 #define SERVER_INFO_HPP
 
 struct ServerInfo {
-    ServerInfo(const char* ip, const char* port, bool is_available)
+    ServerInfo(const std::string ip, const std::string port, bool is_available)
         : ip_{ip}, port_{port}, is_available_{is_available} {}
-    const char* ip_;
-    const char* port_;
+    const std::string ip_;
+    const std::string port_;
     bool is_available_;
 };
 

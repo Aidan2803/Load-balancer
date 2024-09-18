@@ -25,17 +25,17 @@ class LoadBalancerServerInterface {
     void EstablishConnectionWithServers();
 
     void DEBUG_PushTestServer();
+    void DEBUG_PushFiveTestServers();
 
   protected:
     std::vector<ServerInfo> servers_;
 
     const char* port_{"8090"};
+    int backlog_size_;
 
     std::unique_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;
     ClientComHandler client_com_handler_;
 };
-
-
 
 #endif

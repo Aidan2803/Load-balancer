@@ -1,6 +1,9 @@
 #include "load-balancer-interface.hpp"
 
-LoadBalancerServerInterface::LoadBalancerServerInterface() : server_com_handler_{}, client_com_handler_{} { StartLoadBalancerServer(); }
+LoadBalancerServerInterface::LoadBalancerServerInterface()
+    : servers_{}, backlog_size_{10}, load_balancer_socket_wrapper_{}, server_com_handler_{}, client_com_handler_{} {
+    StartLoadBalancerServer();
+}
 
 void LoadBalancerServerInterface::EstablishConnectionWithServers() {
     if (servers_.empty()) {
@@ -13,7 +16,23 @@ void LoadBalancerServerInterface::EstablishConnectionWithServers() {
 }
 
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
-    DEBUG_PushTestServer();
+    DEBUG_PushTestServer();  // This is a stub while we do not have a json parser
+
+    if (servers_.empty()) {
+        throw std::runtime_error("[Load-Balancer] No available servers!");
+    }
+
+    int avavilable_servers_counter{};
+    for (size_t i = 0; i < servers_.size(); i++) {
+        server_com_handler_.EstablishConnectionWithRemoteServer(servers_[i]);
+        if (servers_[i].is_available_) {
+            avavilable_servers_counter++;
+        }
+    }
+
+    if (avavilable_servers_counter == 0) {
+        throw std::runtime_error("[Load-Balancer] No available servers!");
+    }
 
     struct addrinfo hints {};
     struct addrinfo* address_info;
@@ -36,9 +55,17 @@ void LoadBalancerServerInterface::StartLoadBalancerServer() {
 
     freeaddrinfo(address_info);
 
-    if (listen(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), 10) == -1) {
+    if (listen(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), backlog_size_) == -1) {
         throw std::runtime_error(std::string("Listen failed: ") + strerror(errno));
     }
 }
 
 void LoadBalancerServerInterface::DEBUG_PushTestServer() { servers_.push_back(ServerInfo("127.0.0.1", "8080", false)); }
+
+void LoadBalancerServerInterface::DEBUG_PushFiveTestServers() {
+    servers_.push_back(ServerInfo("127.0.0.1", "8080", false));
+    servers_.push_back(ServerInfo("127.0.0.1", "8081", false));
+    servers_.push_back(ServerInfo("127.0.0.1", "8082", false));
+    servers_.push_back(ServerInfo("127.0.0.1", "8083", false));
+    servers_.push_back(ServerInfo("127.0.0.1", "8084", false));
+}
