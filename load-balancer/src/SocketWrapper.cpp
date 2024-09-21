@@ -1,18 +1,31 @@
 #include "SocketWrapper.hpp"
 
+#include <iostream>
 #include <stdexcept>
 #include <string>
 
 SocketWrapper::SocketWrapper(int fd) : fd_{fd} {
     if (fd == -1) {
-        throw std::invalid_argument("Invalid file descriptor given");
+        throw std::invalid_argument("[SocketWrapper] Invalid file descriptor given");
+    }
+
+    int opt = 1;
+    if (setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        throw std::runtime_error(std::string("[SocketWrapper] Could not set socket options: ") + strerror(errno));
+        exit(EXIT_FAILURE);
     }
 }
 
 SocketWrapper::SocketWrapper(int domain, int type, int protocol) {
     fd_ = socket(domain, type, protocol);
     if (fd_ == -1) {
-        throw std::runtime_error(std::string("Could not create a socket: ") + strerror(errno));
+        throw std::runtime_error(std::string("[SocketWrapper]  Could not create a socket: ") + strerror(errno));
+    }
+
+    int opt = 1;
+    if (setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        throw std::runtime_error(std::string("[SocketWrapper] Could not set socket options: ") + strerror(errno));
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -33,6 +46,7 @@ int SocketWrapper::GetSocketFileDescriptor() const { return fd_; }
 
 SocketWrapper::~SocketWrapper() {
     if (fd_ != -1) {
+        std::cout << "[SocketWrapper] Closing a socket for " << fd_ << "\n";
         close(fd_);
     }
 }

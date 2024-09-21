@@ -2,10 +2,10 @@
 #define SERVER_COM_HANDLER_HPP
 
 #include <iostream>
-#include <map>
 #include <memory>
 #include <optional>
 #include <string>
+#include <unordered_map>
 
 #include "SocketWrapper.hpp"
 #include "server-info.hpp"
@@ -20,13 +20,13 @@ class ServerComHandler {
 
   private:
     std::string GetIpPortKeyFormat(const std::string &ip, const std::string &port) const;
-    std::optional<std::map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
+    std::optional<std::unordered_map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
         const std::string &ip, const std::string &port);
-    std::optional<std::map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
+    std::optional<std::unordered_map<std::string, std::unique_ptr<SocketWrapper>>::const_iterator> FindSocketByIpPort(
         std::string &ipport_key);
 
   private:
-    std::map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
+    std::unordered_map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
 };
 
 #endif

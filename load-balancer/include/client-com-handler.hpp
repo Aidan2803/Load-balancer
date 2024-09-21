@@ -13,7 +13,8 @@ class ClientComHandler {
     ~ClientComHandler();
     void AcceptClient(std::unique_ptr<SocketWrapper> &load_balancer_socket_wrapper);
     std::string RecieveRequestFromClient();
-    void SendResponseToClient(std::string &full_response) const;
+    void SendResponseToClient(std::string &full_response);
+    void CloseClientSocket();
 
   private:
     std::unique_ptr<SocketWrapper> client_socket_wrapper_;
