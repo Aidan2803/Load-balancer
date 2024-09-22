@@ -5,13 +5,9 @@ LoadBalancerServerInterface::LoadBalancerServerInterface()
     StartLoadBalancerServer();
 }
 
-void LoadBalancerServerInterface::EstablishConnectionWithServers() {
+void LoadBalancerServerInterface::ChechServersList() {
     if (servers_.empty()) {
         throw std::runtime_error("[Load-Balancer] No servers were added to the server list, can not proceed!");
-    }
-
-    for (auto& server : servers_) {
-        server_com_handler_.EstablishConnectionWithRemoteServer(server);
     }
 }
 
@@ -19,18 +15,6 @@ void LoadBalancerServerInterface::StartLoadBalancerServer() {
     DEBUG_PushTestServer();  // This is a stub while we do not have a json parser
 
     if (servers_.empty()) {
-        throw std::runtime_error("[Load-Balancer] No available servers!");
-    }
-
-    int avavilable_servers_counter{};
-    for (size_t i = 0; i < servers_.size(); i++) {
-        server_com_handler_.EstablishConnectionWithRemoteServer(servers_[i]);
-        if (servers_[i].is_available_) {
-            avavilable_servers_counter++;
-        }
-    }
-
-    if (avavilable_servers_counter == 0) {
         throw std::runtime_error("[Load-Balancer] No available servers!");
     }
 

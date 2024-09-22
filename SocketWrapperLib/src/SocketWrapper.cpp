@@ -5,6 +5,7 @@
 #include <string>
 
 SocketWrapper::SocketWrapper(int fd) : fd_{fd} {
+    std::cout << "[SocketWrapper] Constructing a socket...\n";
     if (fd == -1) {
         throw std::invalid_argument("[SocketWrapper] Invalid file descriptor given");
     }
@@ -17,6 +18,7 @@ SocketWrapper::SocketWrapper(int fd) : fd_{fd} {
 }
 
 SocketWrapper::SocketWrapper(int domain, int type, int protocol) {
+    std::cout << "[SocketWrapper] Constructing a socket...\n";
     fd_ = socket(domain, type, protocol);
     if (fd_ == -1) {
         throw std::runtime_error(std::string("[SocketWrapper]  Could not create a socket: ") + strerror(errno));

@@ -10,7 +10,7 @@ int main() {
         std::unique_ptr<LoadBalancerServerInterface> load_balancer;
         // TODO: after JSON parser will be created, switch shall take decision based on the user input in a json file
         // TODO: after JSON parser will be implemented remove this dummy variable
-        int lb_type = 0;  // TODO ASAP: replace this var with the var from a command line
+        int lb_type = 1;  // TODO ASAP: replace this var with the var from a command line
         switch (lb_type) {
             case 0:
                 load_balancer = std::make_unique<LoadBalancerServerPseudo>();

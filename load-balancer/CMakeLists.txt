@@ -1,18 +1,23 @@
-cmake_minimum_required(VERSION 3.15)
-project(Load-Balancer)
+cmake_minimum_required(VERSION 3.10)
+project(LoadBalancer)
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
 
-
-set(SOURCES
+add_executable(load_balancer 
     src/main.cpp
     src/load-balancer-interface.cpp
     src/load-balancer-pseudo.cpp
     src/load-balancer-roundrobin.cpp
-    src/SocketWrapper.cpp
     src/client-com-handler.cpp
     src/server-com-handler.cpp
 )
 
-add_executable(load_balancer ${SOURCES})
-target_compile_options(load_balancer PRIVATE -Werror -Wall -Wextra -Wpedantic)
+target_include_directories(load_balancer PRIVATE include)
+
+target_include_directories(load_balancer PRIVATE ../SocketWrapperLib/include)
+
+set(SOCKETWRAPPER_LIB "${CMAKE_SOURCE_DIR}/../SocketWrapperLib/build/libSocketWrapper.a")
+
+target_link_libraries(load_balancer PRIVATE ${SOCKETWRAPPER_LIB})
+

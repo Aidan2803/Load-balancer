@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <SocketWrapper.hpp>
 
 int main(int argc, char** argv) {
     try {
@@ -37,7 +38,7 @@ int main(int argc, char** argv) {
 
         freeaddrinfo(ai);
 
-        if (listen(server_socket.GetSocketFileDescriptor(), 10) == -1) {
+        if (listen(server_socket.GetSocketFileDescriptor(), 1) == -1) {
             throw std::runtime_error(std::string("Listen failed: ") + strerror(errno));
         }
 

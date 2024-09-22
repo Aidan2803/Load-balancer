@@ -22,7 +22,7 @@ class LoadBalancerServerInterface {
 
     void GetServersInfo();  // TODO: to be implemeted [need to get information about servers (ip, port, etc) from a JSON
                             // file], shall have an implementation in abstract class
-    void EstablishConnectionWithServers();
+    void ChechServersList();
 
     void DEBUG_PushTestServer();
     void DEBUG_PushFiveTestServers();

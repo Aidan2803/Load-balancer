@@ -14,4 +14,6 @@ while getopts "f" opt; do
 done
 
 cd build
+rm -rf *
+cmake ..
 make
