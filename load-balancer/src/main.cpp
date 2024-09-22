@@ -22,6 +22,8 @@ int main() {
                 break;
         }
 
+        load_balancer.get()->DEBUG_PushServers();
+        load_balancer.get()->StartLoadBalancerServer();
         load_balancer.get()->LoadBalancing();
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;

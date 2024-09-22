@@ -16,10 +16,11 @@ class LoadBalancerServerInterface {
     LoadBalancerServerInterface();
 
     virtual void LoadBalancing() = 0;
+    virtual void DEBUG_PushServers() = 0;
 
-  private:
     void StartLoadBalancerServer();
 
+  protected:
     void GetServersInfo();  // TODO: to be implemeted [need to get information about servers (ip, port, etc) from a JSON
                             // file], shall have an implementation in abstract class
     void ChechServersList();

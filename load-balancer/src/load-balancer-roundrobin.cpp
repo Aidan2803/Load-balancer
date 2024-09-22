@@ -1,13 +1,15 @@
 #include "load-balancer-roundrobin.hpp"
 
+void LoadBalancerServerRoundRobin::DEBUG_PushServers() { DEBUG_PushFiveTestServers(); };
+
 void LoadBalancerServerRoundRobin::LoadBalancing() {
     while (true) {
         try {
-            client_com_handler_.AcceptClient(load_balancer_socket_wrapper_);
-
-            std::string client_requst = client_com_handler_.RecieveRequestFromClient();
-
             for (size_t i = 0; i < servers_.size(); i++) {
+                client_com_handler_.AcceptClient(load_balancer_socket_wrapper_);
+
+                std::string client_requst = client_com_handler_.RecieveRequestFromClient();
+
                 server_com_handler_.EstablishConnectionWithRemoteServer(servers_[i]);
 
                 server_com_handler_.SendRequestToRemoteServer(servers_[i], client_requst);

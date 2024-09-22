@@ -5,6 +5,7 @@
 
 class LoadBalancerServerRoundRobin : public LoadBalancerServerInterface {
   public:
+    virtual void DEBUG_PushServers() override;
     virtual void LoadBalancing() override;
 };
 

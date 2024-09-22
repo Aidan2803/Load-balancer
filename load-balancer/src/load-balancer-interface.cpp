@@ -1,9 +1,7 @@
 #include "load-balancer-interface.hpp"
 
 LoadBalancerServerInterface::LoadBalancerServerInterface()
-    : servers_{}, backlog_size_{10}, load_balancer_socket_wrapper_{}, server_com_handler_{}, client_com_handler_{} {
-    StartLoadBalancerServer();
-}
+    : servers_{}, backlog_size_{10}, load_balancer_socket_wrapper_{}, server_com_handler_{}, client_com_handler_{} {}
 
 void LoadBalancerServerInterface::ChechServersList() {
     if (servers_.empty()) {
@@ -12,8 +10,6 @@ void LoadBalancerServerInterface::ChechServersList() {
 }
 
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
-    DEBUG_PushTestServer();  // This is a stub while we do not have a json parser
-
     if (servers_.empty()) {
         throw std::runtime_error("[Load-Balancer] No available servers!");
     }
