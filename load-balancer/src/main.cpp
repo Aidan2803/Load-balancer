@@ -3,23 +3,28 @@
 #include "load-balancer-pseudo.hpp"
 #include "load-balancer-roundrobin.hpp"
 
-int main() {
+int main(int agrc, char** argv) {
     signal(SIGPIPE, SIG_IGN);  // Ignore SIGPIPE
 
     try {
         std::unique_ptr<LoadBalancerServerInterface> load_balancer;
         // TODO: after JSON parser will be created, switch shall take decision based on the user input in a json file
-        // TODO: after JSON parser will be implemented remove this dummy variable
+        // TODO: after JSON parser will be implemented remove this command line arguments pars
         int lb_type = 1;  // TODO ASAP: replace this var with the var from a command line
-        switch (lb_type) {
-            case 0:
-                load_balancer = std::make_unique<LoadBalancerServerPseudo>();
-                break;
-            case 1:
-                load_balancer = std::make_unique<LoadBalancerServerRoundRobin>();
-                break;
-            default:
-                break;
+
+        if (agrc == 2) {
+            switch (argv[1][0]) {
+                case '0':
+                    load_balancer = std::make_unique<LoadBalancerServerPseudo>();
+                    break;
+                case '1':
+                    load_balancer = std::make_unique<LoadBalancerServerRoundRobin>();
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            load_balancer = std::make_unique<LoadBalancerServerPseudo>();
         }
 
         load_balancer.get()->DEBUG_PushServers();

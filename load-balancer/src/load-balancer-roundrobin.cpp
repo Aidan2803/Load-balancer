@@ -17,6 +17,8 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
                 std::string server_response = server_com_handler_.ReceiveResponseFromRemoteServer(servers_[i]);
 
                 client_com_handler_.SendResponseToClient(server_response);
+
+                client_com_handler_.CloseClientSocket();
             }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
