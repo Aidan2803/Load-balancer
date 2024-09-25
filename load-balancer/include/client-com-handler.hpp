@@ -11,7 +11,7 @@ class ClientComHandler {
   public:
     ClientComHandler();
     ~ClientComHandler();
-    void AcceptClient(std::unique_ptr<SocketWrapper> &load_balancer_socket_wrapper);
+    void AcceptClient(std::shared_ptr<SocketWrapper> &load_balancer_socket_wrapper);
     std::string RecieveRequestFromClient();
     void SendResponseToClient(std::string &full_response);
     void CloseClientSocket();

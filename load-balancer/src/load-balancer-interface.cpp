@@ -26,16 +26,16 @@ void LoadBalancerServerInterface::StartLoadBalancerServer() {
     }
 
     load_balancer_socket_wrapper_ =
-        std::make_unique<SocketWrapper>(address_info->ai_family, address_info->ai_socktype, address_info->ai_protocol);
+        std::make_shared<SocketWrapper>(address_info->ai_family, address_info->ai_socktype, address_info->ai_protocol);
 
-    if (bind(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), address_info->ai_addr,
+    if (bind(load_balancer_socket_wrapper_->GetSocketFileDescriptor(), address_info->ai_addr,
              address_info->ai_addrlen) == -1) {
         throw std::runtime_error(std::string("Bind failed: ") + strerror(errno));
     }
 
     freeaddrinfo(address_info);
 
-    if (listen(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), backlog_size_) == -1) {
+    if (listen(load_balancer_socket_wrapper_->GetSocketFileDescriptor(), backlog_size_) == -1) {
         throw std::runtime_error(std::string("Listen failed: ") + strerror(errno));
     }
 }

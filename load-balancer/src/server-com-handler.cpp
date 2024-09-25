@@ -48,7 +48,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
 
     auto iterator = FindSocketByIpPort(ipport);
     if (iterator) {
-        if (connect(iterator.value()->second.get()->GetSocketFileDescriptor(), remote_server->ai_addr,
+        if (connect(iterator.value()->second->GetSocketFileDescriptor(), remote_server->ai_addr,
                     remote_server->ai_addrlen) == -1) {
             std::cout << "[ServerComHandler] Can not connect to remote server!\n";
             server.is_available_ = false;
@@ -56,7 +56,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
     }
 
     for (const auto &pair : server_ipport_to_socket_map_) {
-        std::cout << "IpPort: " << pair.first << ", Socket FD: " << pair.second.get()->GetSocketFileDescriptor()
+        std::cout << "IpPort: " << pair.first << ", Socket FD: " << pair.second->GetSocketFileDescriptor()
                   << std::endl;
     }
 
@@ -66,7 +66,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
 void ServerComHandler::SendRequestToRemoteServer(ServerInfo &server, std::string &request_buffer) {
     auto iterator = FindSocketByIpPort(server.ip_, server.port_);
     if (iterator) {
-        auto sent_size = send(iterator.value()->second.get()->GetSocketFileDescriptor(), request_buffer.c_str(),
+        auto sent_size = send(iterator.value()->second->GetSocketFileDescriptor(), request_buffer.c_str(),
                               sizeof(request_buffer.c_str()), 0);
 
         if (sent_size == -1) {
@@ -84,7 +84,7 @@ std::string ServerComHandler::ReceiveResponseFromRemoteServer(ServerInfo &server
 
     auto iterator = FindSocketByIpPort(server.ip_, server.port_);
     if (iterator) {
-        while ((bytes_received = recv(iterator.value()->second.get()->GetSocketFileDescriptor(), receive_buffer,
+        while ((bytes_received = recv(iterator.value()->second->GetSocketFileDescriptor(), receive_buffer,
                                       sizeof(receive_buffer) - 1, 0)) > 0) {
             receive_buffer[bytes_received] = '\0';
             full_response += receive_buffer;

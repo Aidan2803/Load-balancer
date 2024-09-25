@@ -34,7 +34,7 @@ class LoadBalancerServerInterface {
     const char* port_{"8090"};
     int backlog_size_;
 
-    std::unique_ptr<SocketWrapper> load_balancer_socket_wrapper_;
+    std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;
     ClientComHandler client_com_handler_;
 };
