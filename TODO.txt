@@ -1,4 +1,7 @@
+TODO:
 JSON Parser
 Proper logging + ability to turn logging on and off
 Make server to tasks that consume more time then one time respone
 Implement other load balancing algorythms  
+
+Known issues:
