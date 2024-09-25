@@ -5,3 +5,4 @@ Make server to tasks that consume more time then one time respone
 Implement other load balancing algorythms  
 
 Known issues:
+1) Bottleneck on the load balancer side due to the wait for the server answer before proceeding with the next client
