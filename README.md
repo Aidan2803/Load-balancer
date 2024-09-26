@@ -1,4 +1,4 @@
-Simple load-balancer
+Simple load-balancer to distribute load on servers
 
 Load-balancing algorithms implemented:
  - RoundRobin
