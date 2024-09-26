@@ -11,6 +11,7 @@ add_executable(load_balancer
     src/load-balancer-roundrobin.cpp
     src/client-com-handler.cpp
     src/server-com-handler.cpp
+    src/thread-pool.cpp
 )
 
 target_include_directories(load_balancer PRIVATE include)

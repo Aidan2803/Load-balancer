@@ -4,6 +4,8 @@
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 #include "SocketWrapper.hpp"
@@ -16,6 +18,8 @@ class LoadBalancerServerInterface {
     LoadBalancerServerInterface();
 
     virtual void LoadBalancing() = 0;
+    virtual void HandleClient(ServerComHandler &server_com_handler, ClientComHandler &client_com_handler,
+                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) = 0;
     virtual void DEBUG_PushServers() = 0;
 
     void StartLoadBalancerServer();
@@ -31,8 +35,11 @@ class LoadBalancerServerInterface {
   protected:
     std::vector<ServerInfo> servers_;
 
-    const char* port_{"8090"};
+    const char *port_{"8090"};
     int backlog_size_;
+
+    std::mutex load_balancer_mutex_;
+    std::vector<std::thread> thread_pool_;
 
     std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;

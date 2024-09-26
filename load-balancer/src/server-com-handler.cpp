@@ -56,8 +56,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
     }
 
     for (const auto &pair : server_ipport_to_socket_map_) {
-        std::cout << "IpPort: " << pair.first << ", Socket FD: " << pair.second->GetSocketFileDescriptor()
-                  << std::endl;
+        std::cout << "IpPort: " << pair.first << ", Socket FD: " << pair.second->GetSocketFileDescriptor() << std::endl;
     }
 
     freeaddrinfo(remote_server);

@@ -6,3 +6,4 @@ Implement other load balancing algorythms
 
 Known issues:
 1) Bottleneck on the load balancer side due to the wait for the server answer before proceeding with the next client
+2) In case of multithreaded implementation Server-Communitcation-Handler and Client-Communitcation-Handler need to be protected via mutexes or etc
