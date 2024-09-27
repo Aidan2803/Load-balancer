@@ -1,7 +1,5 @@
 #include "load-balancer-pseudo.hpp"
 
-#include "thread-pool.hpp"
-
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler, ClientComHandler &client_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                             ServerInfo &server) {
@@ -27,13 +25,18 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
 }
 
 void LoadBalancerServerPseudo::LoadBalancing() {
+    struct pollfd fds[1];
+    fds[0].fd = load_balancer_socket_wrapper_->GetSocketFileDescriptor();
+    fds[0].events = POLLIN;
+
     while (true) {
         try {
-            ThreadPool tp(1);
-
-            tp.EnqueueTask([this]() {
-                HandleClient(server_com_handler_, client_com_handler_, load_balancer_socket_wrapper_, servers_[0]);
-            });
+            int poll_ret = poll(fds, 1, -1);
+            if (poll_ret > 0 && (fds[0].revents == POLLIN)) {
+                thread_pool_->EnqueueTask([this]() {
+                    HandleClient(server_com_handler_, client_com_handler_, load_balancer_socket_wrapper_, servers_[0]);
+                });
+            }
 
         } catch (const std::exception &e) {
             std::cerr << "Error: " << e.what() << std::endl;

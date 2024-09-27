@@ -3,16 +3,12 @@
 LoadBalancerServerInterface::LoadBalancerServerInterface()
     : servers_{}, backlog_size_{10}, load_balancer_socket_wrapper_{}, server_com_handler_{}, client_com_handler_{} {}
 
-void LoadBalancerServerInterface::ChechServersList() {
-    if (servers_.empty()) {
-        throw std::runtime_error("[Load-Balancer] No servers were added to the server list, can not proceed!");
-    }
-}
-
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
     if (servers_.empty()) {
         throw std::runtime_error("[Load-Balancer] No available servers!");
     }
+
+    thread_pool_ = std::make_unique<ThreadPool>(servers_.size());
 
     struct addrinfo hints {};
     struct addrinfo* address_info;

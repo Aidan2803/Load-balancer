@@ -1,6 +1,8 @@
 #ifndef LOAD_BALANCER_PSEUDO
 #define LOAD_BALANCER_PSEUDO
 
+#include <poll.h>
+
 #include "load-balancer-interface.hpp"
 
 class LoadBalancerServerPseudo : public LoadBalancerServerInterface {

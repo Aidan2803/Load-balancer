@@ -12,6 +12,7 @@
 #include "client-com-handler.hpp"
 #include "server-com-handler.hpp"
 #include "server-info.hpp"
+#include "thread-pool.hpp"
 
 class LoadBalancerServerInterface {
   public:
@@ -27,8 +28,6 @@ class LoadBalancerServerInterface {
   protected:
     void GetServersInfo();  // TODO: to be implemeted [need to get information about servers (ip, port, etc) from a JSON
                             // file], shall have an implementation in abstract class
-    void ChechServersList();
-
     void DEBUG_PushTestServer();
     void DEBUG_PushFiveTestServers();
 
@@ -39,7 +38,7 @@ class LoadBalancerServerInterface {
     int backlog_size_;
 
     std::mutex load_balancer_mutex_;
-    std::vector<std::thread> thread_pool_;
+    std::unique_ptr<ThreadPool> thread_pool_;
 
     std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;

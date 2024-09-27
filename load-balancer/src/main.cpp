@@ -27,9 +27,9 @@ int main(int agrc, char** argv) {
             load_balancer = std::make_unique<LoadBalancerServerPseudo>();
         }
 
-        load_balancer.get()->DEBUG_PushServers();
-        load_balancer.get()->StartLoadBalancerServer();
-        load_balancer.get()->LoadBalancing();
+        load_balancer->DEBUG_PushServers();
+        load_balancer->StartLoadBalancerServer();
+        load_balancer->LoadBalancing();
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;
         return EXIT_FAILURE;
