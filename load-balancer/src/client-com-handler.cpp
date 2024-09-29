@@ -32,10 +32,9 @@ std::string ClientComHandler::RecieveRequestFromClient() {
 void ClientComHandler::SendResponseToClient(std::string &full_response) {
     if (full_response.size() > 0) {
         ssize_t bytes_sent =
-            send(client_socket_wrapper_->GetSocketFileDescriptor(),
-                 reinterpret_cast<const void *>(full_response.size()), strlen(full_response.c_str()), 0);
+            send(client_socket_wrapper_->GetSocketFileDescriptor(), full_response.c_str(), full_response.size(), 0);
         if (bytes_sent == -1) {
-            std::cout << "[ClientComHandler] Failed to send response to the client\n";
+            std::cout << "[ClientComHandler] Failed to send response to the client " << strerror(errno) << "\n";
         }
         std::cout << "[ClientComHandler] Sent " << bytes_sent << " bytes to the client\n";
     }

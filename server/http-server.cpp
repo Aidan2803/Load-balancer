@@ -9,8 +9,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <SocketWrapper.hpp>
+#include <random>
 
 int main(int argc, char** argv) {
+    srand(time(NULL));
     try {
         const char* port = "8080";
         if (argc >= 2) {
@@ -59,6 +61,11 @@ int main(int argc, char** argv) {
                 if (bytes_received <= 0) {
                     throw std::runtime_error("Failed to receive data");
                 }
+
+                // Simulate some work that takes time
+                int response_delay = rand() % 10;
+                std::cout << "Delay time " << response_delay << "s \n";
+                sleep(response_delay);
 
                 const char* response =
                     "HTTP/1.1 200 OK\r\n"

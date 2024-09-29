@@ -26,6 +26,7 @@ class ServerComHandler {
         std::string &ipport_key);
 
   private:
+    // std::mutex server_com_handler_mutex_;
     std::unordered_map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
 };
 
