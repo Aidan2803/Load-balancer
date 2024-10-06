@@ -10,10 +10,11 @@
 
 #include "SocketWrapper.hpp"
 #include "server-info.hpp"
+#include "spdlog/spdlog.h"
 
 class ServerComHandler {
   public:
-    ServerComHandler() = default;
+    ServerComHandler();
     ~ServerComHandler() = default;
     void EstablishConnectionWithRemoteServer(ServerInfo &server);
     void SendRequestToRemoteServer(ServerInfo &server, std::string &request_buffer);
@@ -29,6 +30,7 @@ class ServerComHandler {
   private:
     std::mutex server_com_handler_mutex_;
     std::unordered_map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
+    const std::string instance_name_;
 };
 
 #endif

@@ -9,6 +9,7 @@
 
 class LoadBalancerServerRoundRobin : public LoadBalancerServerInterface {
   public:
+    LoadBalancerServerRoundRobin(const std::string &instance_name);
     virtual void HandleClient(ServerComHandler &server_com_handler,
                               std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) override;
     virtual void LoadBalancing() override;

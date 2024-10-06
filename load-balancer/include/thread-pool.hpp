@@ -5,6 +5,8 @@
 #include <thread>
 #include <vector>
 
+#include "spdlog/spdlog.h"
+
 class ThreadPool {
   public:
     ThreadPool(int number_of_threads);
@@ -29,4 +31,6 @@ class ThreadPool {
     std::mutex queue_mutex_;
     std::condition_variable condition_;
     bool stop_ = false;
+
+    const std::string instance_name_;
 };

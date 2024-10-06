@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-ThreadPool::ThreadPool(int number_of_threads) {
-    std::cout << "[ThreadPool] " << number_of_threads << " threads will be spawned\n";
+ThreadPool::ThreadPool(int number_of_threads) : instance_name_{"[ThreadPool]"} {
+    spdlog::info("{} {} threads will be spawned", instance_name_, number_of_threads);
+
     for (int i = 0; i < number_of_threads; ++i) {
         threads_.emplace_back([this] {
             while (true) {

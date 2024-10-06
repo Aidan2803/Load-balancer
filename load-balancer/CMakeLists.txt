@@ -4,6 +4,8 @@ project(LoadBalancer)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
+find_package(spdlog REQUIRED)
+
 add_executable(load_balancer 
     src/main.cpp
     src/load-balancer-interface.cpp
@@ -15,10 +17,9 @@ add_executable(load_balancer
 )
 
 target_include_directories(load_balancer PRIVATE include)
-
 target_include_directories(load_balancer PRIVATE ../SocketWrapperLib/include)
 
 set(SOCKETWRAPPER_LIB "${CMAKE_SOURCE_DIR}/../SocketWrapperLib/build/libSocketWrapper.a")
 
 target_link_libraries(load_balancer PRIVATE ${SOCKETWRAPPER_LIB})
-
+target_link_libraries(load_balancer PRIVATE spdlog::spdlog)

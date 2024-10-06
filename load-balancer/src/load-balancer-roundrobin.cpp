@@ -1,10 +1,13 @@
 #include "load-balancer-roundrobin.hpp"
 
+LoadBalancerServerRoundRobin::LoadBalancerServerRoundRobin(const std::string &instance_name)
+    : LoadBalancerServerInterface(instance_name) {}
+
 void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_handler,
                                                 std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                                 ServerInfo &server) {
-    std::cout << "[LoadBalancerServerRoundRobin] Handle a client by the << " << std::this_thread::get_id()
-              << " thread \n";
+    spdlog::info("{} Handle a client by the {}", instance_name_,
+                 std::hash<std::thread::id>{}(std::this_thread::get_id()));
 
     ClientComHandler client_handler;
 
@@ -39,8 +42,9 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
                     thread_pool_->EnqueueTask([this, &server_number_iterator]() {
                         HandleClient(server_com_handler_, load_balancer_socket_wrapper_,
                                      servers_[server_number_iterator]);
-                        std::cout << "[LoadBalancerServerRoundRobin] Current amount of tasks: "
-                                  << thread_pool_->GetCurrentTasksAmount() << "\n";
+                        spdlog::info("{} Current amount of tasks: {}", instance_name_,
+                                     thread_pool_->GetCurrentTasksAmount());
+
                         server_number_iterator = (server_number_iterator + 1) % servers_.size();
                     });
                 }
@@ -50,11 +54,11 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
                 socklen_t error_len = sizeof(err);
                 getsockopt(load_balancer_socket_wrapper_->GetSocketFileDescriptor(), SOL_SOCKET, SO_ERROR, &err,
                            &error_len);
-                std::cerr << "[LoadBalancerServerRoundRobin] Socket error: " << strerror(err) << std::endl;
+                spdlog::error("{}  Socket error: {}", instance_name_, strerror(err));
             }
 
         } catch (const std::exception &e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            spdlog::error("{} {}", instance_name_, e.what());
         }
     }
 }

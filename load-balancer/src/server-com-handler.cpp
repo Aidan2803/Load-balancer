@@ -1,5 +1,7 @@
 #include "server-com-handler.hpp"
 
+ServerComHandler::ServerComHandler() : instance_name_{"[ServerComHandler]"} {}
+
 std::string ServerComHandler::GetIpPortKeyFormat(const std::string &ip, const std::string &port) const {
     return ip + ':' + port;
 }
@@ -11,7 +13,7 @@ ServerComHandler::FindSocketByIpPort(const std::string &ip, const std::string &p
     if (iterator != server_ipport_to_socket_map_.end()) {
         return iterator;
     } else {
-        std::cout << "[ServerComHandler] Socket for " << ipport << " does not extist!\n";
+        spdlog::warn("{} Socket for {} does not extist!", instance_name_, ipport);
         return std::nullopt;
     }
 }
@@ -22,7 +24,7 @@ ServerComHandler::FindSocketByIpPort(std::string &ipport_key) {
     if (iterator != server_ipport_to_socket_map_.end()) {
         return iterator;
     } else {
-        std::cout << "[ServerComHandler] Socket for " << ipport_key << " does not extist!\n";
+        spdlog::warn("{} Socket for {} does not extist!", instance_name_, ipport_key);
         return std::nullopt;
     }
 }
@@ -49,14 +51,14 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
         server_com_handler_mutex_.lock();
         if (connect(iterator.value()->second->GetSocketFileDescriptor(), remote_server->ai_addr,
                     remote_server->ai_addrlen) == -1) {
-            std::cout << "[ServerComHandler] Can not connect to remote server!\n";
+            spdlog::info("{} Can not connect to remote server!", instance_name_);
             server.is_available_ = false;
         }
         server_com_handler_mutex_.unlock();
     }
 
     for (const auto &pair : server_ipport_to_socket_map_) {
-        std::cout << "IpPort: " << pair.first << ", Socket FD: " << pair.second->GetSocketFileDescriptor() << std::endl;
+        spdlog::debug("IpPort: {}, Socket FD {}", pair.first, pair.second->GetSocketFileDescriptor());
     }
 
     freeaddrinfo(remote_server);
@@ -71,6 +73,8 @@ void ServerComHandler::SendRequestToRemoteServer(ServerInfo &server, std::string
         server_com_handler_mutex_.unlock();
         if (sent_size == -1) {
             if (errno == EPIPE) {
+                spdlog::critical("{} Send failed, socket closed! {}", instance_name_,
+                                 std::to_string(iterator.value()->second->GetSocketFileDescriptor()));
                 throw(std::runtime_error("[ServerComHandler] Send failed, socket closed! " +
                                          std::to_string(iterator.value()->second->GetSocketFileDescriptor()) + "\n"));
             }
@@ -95,12 +99,11 @@ std::string ServerComHandler::ReceiveResponseFromRemoteServer(ServerInfo &server
     }
 
     if (!full_response.empty()) {
-        std::cout << "[ServerComHandler] " << server.ip_ << ":" << server.port_ << " Will send a response message: \n"
-                  << "---Message starts here---\n"
-                  << full_response << "---Message ends here---\n";
-
+        spdlog::info(
+            "{} {} {} Will send a response message: \n ---Message starts here---\n {} ---Message ends here---\n",
+            instance_name_, server.ip_, server.port_, full_response);
     } else {
-        std::cerr << "[ServerComHandler] Warning: Received an empty response from the remote server!" << std::endl;
+        spdlog::error("{} Received an empty response from the remote server!", instance_name_);
     }
 
     return full_response;

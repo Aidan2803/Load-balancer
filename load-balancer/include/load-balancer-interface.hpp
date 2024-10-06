@@ -12,11 +12,12 @@
 #include "client-com-handler.hpp"
 #include "server-com-handler.hpp"
 #include "server-info.hpp"
+#include "spdlog/spdlog.h"
 #include "thread-pool.hpp"
 
 class LoadBalancerServerInterface {
   public:
-    LoadBalancerServerInterface();
+    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]");
 
     virtual void LoadBalancing() = 0;
     virtual void HandleClient(ServerComHandler &server_com_handler,
@@ -42,7 +43,7 @@ class LoadBalancerServerInterface {
 
     std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;
-    ClientComHandler client_com_handler_;
+    const std::string instance_name_;
 };
 
 #endif

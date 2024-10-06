@@ -1,5 +1,8 @@
 #include "load-balancer-pseudo.hpp"
 
+LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_name)
+    : LoadBalancerServerInterface(instance_name) {}
+
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                             ServerInfo &server) {
@@ -11,13 +14,13 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
 
     std::string client_requst = client_handler.RecieveRequestFromClient();
 
-    std::cout << "[LoadBalancerServerPseudo] Received client request: " << client_requst << std::endl;
+    spdlog::info("{} Received client request: {}", instance_name_, client_requst);
 
     server_com_handler.EstablishConnectionWithRemoteServer(server);
 
     server_com_handler.SendRequestToRemoteServer(servers_[0], client_requst);
 
-    std::cout << "[LoadBalancerServerPseudo] Sent request to remote server" << std::endl;
+    spdlog::info("{} Sent request to remote server", instance_name_);
 
     std::string server_response = server_com_handler.ReceiveResponseFromRemoteServer(server);
 
@@ -40,7 +43,7 @@ void LoadBalancerServerPseudo::LoadBalancing() {
             }
 
         } catch (const std::exception &e) {
-            std::cerr << "Error: " << e.what() << std::endl;
+            spdlog::error("{} {}", instance_name_, e.what());
         }
     }
 }
