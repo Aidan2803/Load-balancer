@@ -64,6 +64,10 @@ int main(int argc, char** argv) {
 
                 // Simulate some work that takes time
                 int response_delay = rand() % 10;
+                if (argc == 3) {
+                    response_delay = std::stoi(argv[2]);
+                } 
+
                 std::cout << "Delay time " << response_delay << "s \n";
                 sleep(response_delay);
 

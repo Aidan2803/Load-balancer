@@ -1,13 +1,15 @@
 #include "load-balancer-pseudo.hpp"
 
-void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler, ClientComHandler &client_com_handler,
+void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                             ServerInfo &server) {
     std::lock_guard<std::mutex> load_balancer_lock_guard(load_balancer_mutex_);
 
-    client_com_handler_.AcceptClient(load_balancer_socket_wrapper);
+    ClientComHandler client_handler;
 
-    std::string client_requst = client_com_handler_.RecieveRequestFromClient();
+    client_handler.AcceptClient(load_balancer_socket_wrapper);
+
+    std::string client_requst = client_handler.RecieveRequestFromClient();
 
     std::cout << "[LoadBalancerServerPseudo] Received client request: " << client_requst << std::endl;
 
@@ -19,9 +21,9 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
 
     std::string server_response = server_com_handler.ReceiveResponseFromRemoteServer(server);
 
-    client_com_handler.SendResponseToClient(server_response);
+    client_handler.SendResponseToClient(server_response);
 
-    client_com_handler.CloseClientSocket();
+    client_handler.CloseClientSocket();
 }
 
 void LoadBalancerServerPseudo::LoadBalancing() {
@@ -33,9 +35,8 @@ void LoadBalancerServerPseudo::LoadBalancing() {
         try {
             int poll_ret = poll(fds, 1, -1);
             if (poll_ret > 0 && (fds[0].revents == POLLIN)) {
-                thread_pool_->EnqueueTask([this]() {
-                    HandleClient(server_com_handler_, client_com_handler_, load_balancer_socket_wrapper_, servers_[0]);
-                });
+                thread_pool_->EnqueueTask(
+                    [this]() { HandleClient(server_com_handler_, load_balancer_socket_wrapper_, servers_[0]); });
             }
 
         } catch (const std::exception &e) {

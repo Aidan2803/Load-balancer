@@ -23,6 +23,10 @@ ThreadPool::ThreadPool(int number_of_threads) {
     }
 }
 
+int ThreadPool::GetCurrentTasksAmount() { return tasks_.size(); }
+
+int ThreadPool::GetThreadsAmount() { return threads_.size(); }
+
 ThreadPool::~ThreadPool() {
     {
         std::unique_lock<std::mutex> ulock(queue_mutex_);

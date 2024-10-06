@@ -19,7 +19,7 @@ class LoadBalancerServerInterface {
     LoadBalancerServerInterface();
 
     virtual void LoadBalancing() = 0;
-    virtual void HandleClient(ServerComHandler &server_com_handler, ClientComHandler &client_com_handler,
+    virtual void HandleClient(ServerComHandler &server_com_handler,
                               std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) = 0;
     virtual void DEBUG_PushServers() = 0;
 

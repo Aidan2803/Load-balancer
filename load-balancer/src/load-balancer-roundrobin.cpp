@@ -1,15 +1,16 @@
 #include "load-balancer-roundrobin.hpp"
 
 void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_handler,
-                                                ClientComHandler &client_com_handler,
                                                 std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                                 ServerInfo &server) {
-    std::lock_guard<std::mutex> load_balancer_lock_guard(load_balancer_mutex_);
-    std::cout << "Handle a client\n";
+    std::cout << "[LoadBalancerServerRoundRobin] Handle a client by the << " << std::this_thread::get_id()
+              << " thread \n";
 
-    client_com_handler.AcceptClient(load_balancer_socket_wrapper_);
+    ClientComHandler client_handler;
 
-    std::string client_requst = client_com_handler_.RecieveRequestFromClient();
+    client_handler.AcceptClient(load_balancer_socket_wrapper_);
+
+    std::string client_requst = client_handler.RecieveRequestFromClient();
 
     server_com_handler.EstablishConnectionWithRemoteServer(server);
 
@@ -17,9 +18,9 @@ void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_han
 
     std::string server_response = server_com_handler_.ReceiveResponseFromRemoteServer(server);
 
-    client_com_handler.SendResponseToClient(server_response);
+    client_handler.SendResponseToClient(server_response);
 
-    client_com_handler.CloseClientSocket();
+    client_handler.CloseClientSocket();
 }
 
 void LoadBalancerServerRoundRobin::LoadBalancing() {
@@ -28,18 +29,19 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
     polling_fd.events = POLLIN;
 
     int server_number_iterator = 0;
+    const int max_concurrent_tasks = thread_pool_->GetThreadsAmount();
     while (true) {
         try {
             int poll_ret = poll(&polling_fd, 1, -1);
 
             if (poll_ret > 0 && (polling_fd.revents & POLLIN)) {
-                if (!task_for_thread_created_.exchange(true)) {
+                if (thread_pool_->GetCurrentTasksAmount() < max_concurrent_tasks) {
                     thread_pool_->EnqueueTask([this, &server_number_iterator]() {
-                        HandleClient(server_com_handler_, client_com_handler_, load_balancer_socket_wrapper_,
+                        HandleClient(server_com_handler_, load_balancer_socket_wrapper_,
                                      servers_[server_number_iterator]);
-
+                        std::cout << "[LoadBalancerServerRoundRobin] Current amount of tasks: "
+                                  << thread_pool_->GetCurrentTasksAmount() << "\n";
                         server_number_iterator = (server_number_iterator + 1) % servers_.size();
-                        task_for_thread_created_ = false;
                     });
                 }
 

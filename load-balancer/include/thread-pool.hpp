@@ -18,6 +18,9 @@ class ThreadPool {
         condition_.notify_one();
     }
 
+    int GetCurrentTasksAmount();
+    int GetThreadsAmount();
+
     ~ThreadPool();
 
   private:

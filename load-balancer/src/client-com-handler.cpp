@@ -1,9 +1,5 @@
 #include "client-com-handler.hpp"
 
-ClientComHandler::ClientComHandler() = default;
-
-ClientComHandler::~ClientComHandler() = default;
-
 void ClientComHandler::AcceptClient(std::shared_ptr<SocketWrapper> &load_balancer_socket_wrapper) {
     sockaddr_storage client_addr{};
     socklen_t client_len = sizeof(client_addr);
