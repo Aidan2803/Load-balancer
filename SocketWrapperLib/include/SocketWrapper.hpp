@@ -10,6 +10,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include "spdlog/spdlog.h"
 
 class SocketWrapper {
   public:
@@ -29,6 +30,7 @@ class SocketWrapper {
     ~SocketWrapper();
 
   private:
+    const std::string instance_name_ = "[SocketWrapper]";
     int fd_{-1};
 };
 

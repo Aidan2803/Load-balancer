@@ -5,27 +5,31 @@
 #include <string>
 
 SocketWrapper::SocketWrapper(int fd) : fd_{fd} {
-    std::cout << "[SocketWrapper] Constructing a socket...\n";
+    spdlog::info("{} Constructing a socket...", instance_name_);
     if (fd == -1) {
+        spdlog::critical("{} Invalid file descriptor given", instance_name_);
         throw std::invalid_argument("[SocketWrapper] Invalid file descriptor given");
     }
 
     int opt = 1;
     if (setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        spdlog::critical("{} Could not set socket options: {}", instance_name_, strerror(errno));
         throw std::runtime_error(std::string("[SocketWrapper] Could not set socket options: ") + strerror(errno));
         exit(EXIT_FAILURE);
     }
 }
 
 SocketWrapper::SocketWrapper(int domain, int type, int protocol) {
-    std::cout << "[SocketWrapper] Constructing a socket...\n";
+    spdlog::info("{} Constructing a socket...", instance_name_);
     fd_ = socket(domain, type, protocol);
     if (fd_ == -1) {
+        spdlog::critical("{} Could not create a socket: {}", instance_name_, strerror(errno));
         throw std::runtime_error(std::string("[SocketWrapper]  Could not create a socket: ") + strerror(errno));
     }
 
     int opt = 1;
     if (setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        spdlog::critical("{} Could not set socket options: {}", instance_name_, strerror(errno));
         throw std::runtime_error(std::string("[SocketWrapper] Could not set socket options: ") + strerror(errno));
         exit(EXIT_FAILURE);
     }
@@ -48,7 +52,7 @@ int SocketWrapper::GetSocketFileDescriptor() const { return fd_; }
 
 SocketWrapper::~SocketWrapper() {
     if (fd_ != -1) {
-        std::cout << "[SocketWrapper] Closing a socket for " << fd_ << "\n";
+        spdlog::info("{}  Closing a socket for {}", instance_name_, fd_);
         close(fd_);
     }
 }

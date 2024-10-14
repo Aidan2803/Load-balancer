@@ -1,2 +1,4 @@
-mkdir -p build
-g++ -o build/server http-server.cpp -I../SocketWrapperLib/include -L../SocketWrapperLib/build -lSocketWrapper
+rm -rf build
+mkdir build && cd build
+cmake ..
+make
