@@ -32,7 +32,7 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
     polling_fd.events = POLLIN;
 
     int server_number_iterator = 0;
-    const int max_concurrent_tasks = thread_pool_->GetThreadsAmount();
+    const int max_concurrent_tasks = thread_pool_->GetMaxThreadsAmount();
     while (true) {
         try {
             int poll_ret = poll(&polling_fd, 1, -1);
@@ -48,7 +48,6 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
                         server_number_iterator = (server_number_iterator + 1) % servers_.size();
                     });
                 }
-
             } else if (polling_fd.revents & POLLERR) {
                 int err = 0;
                 socklen_t error_len = sizeof(err);

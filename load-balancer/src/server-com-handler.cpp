@@ -103,7 +103,8 @@ std::string ServerComHandler::ReceiveResponseFromRemoteServer(ServerInfo &server
             "{} {} {} Will send a response message: \n ---Message starts here---\n {} ---Message ends here---\n",
             instance_name_, server.ip_, server.port_, full_response);
     } else {
-        spdlog::error("{} Received an empty response from the remote server!", instance_name_);
+        spdlog::error("{} Received an empty response from the remote server! {}:{}", instance_name_, server.ip_,
+                      server.port_);
     }
 
     return full_response;

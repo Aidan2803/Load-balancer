@@ -26,7 +26,7 @@ ThreadPool::ThreadPool(int number_of_threads) : instance_name_{"[ThreadPool]"} {
 
 int ThreadPool::GetCurrentTasksAmount() { return tasks_.size(); }
 
-int ThreadPool::GetThreadsAmount() { return threads_.size(); }
+int ThreadPool::GetMaxThreadsAmount() { return threads_.size(); }
 
 ThreadPool::~ThreadPool() {
     {

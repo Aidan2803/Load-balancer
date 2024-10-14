@@ -21,7 +21,7 @@ class ThreadPool {
     }
 
     int GetCurrentTasksAmount();
-    int GetThreadsAmount();
+    int GetMaxThreadsAmount();
 
     ~ThreadPool();
 
