@@ -13,7 +13,6 @@ while getopts "f" opt; do
   esac
 done
 
-cd build
-rm -rf *
+mkdir -p build && cd build
 cmake ..
 make
