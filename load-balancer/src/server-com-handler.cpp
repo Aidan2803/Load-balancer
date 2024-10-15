@@ -51,23 +51,23 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
         server_com_handler_mutex_.lock();
         if (connect(iterator.value()->second->GetSocketFileDescriptor(), remote_server->ai_addr,
                     remote_server->ai_addrlen) == -1) {
-            spdlog::info("{} Can not connect to remote server!", instance_name_);
+            spdlog::warn("{} Can not connect to remote server!", instance_name_);
             server.is_available_ = false;
         }
         server_com_handler_mutex_.unlock();
     }
 
-    for (const auto &pair : server_ipport_to_socket_map_) {
-        spdlog::debug("IpPort: {}, Socket FD {}", pair.first, pair.second->GetSocketFileDescriptor());
-    }
+    // for (const auto &pair : server_ipport_to_socket_map_) {
+    //     spdlog::debug("IpPort: {}, Socket FD {}", pair.first, pair.second->GetSocketFileDescriptor());
+    // }
 
     freeaddrinfo(remote_server);
 }
 
 void ServerComHandler::SendRequestToRemoteServer(ServerInfo &server, std::string &request_buffer) {
+    server_com_handler_mutex_.lock();
     auto iterator = FindSocketByIpPort(server.ip_, server.port_);
     if (iterator) {
-        server_com_handler_mutex_.lock();
         auto sent_size = send(iterator.value()->second->GetSocketFileDescriptor(), request_buffer.c_str(),
                               sizeof(request_buffer.c_str()), 0);
         server_com_handler_mutex_.unlock();
@@ -87,9 +87,9 @@ std::string ServerComHandler::ReceiveResponseFromRemoteServer(ServerInfo &server
     std::string full_response;
     ssize_t bytes_received = 0;
 
+    server_com_handler_mutex_.lock();
     auto iterator = FindSocketByIpPort(server.ip_, server.port_);
     if (iterator) {
-        server_com_handler_mutex_.lock();
         while ((bytes_received = recv(iterator.value()->second->GetSocketFileDescriptor(), receive_buffer,
                                       sizeof(receive_buffer) - 1, 0)) > 0) {
             receive_buffer[bytes_received] = '\0';

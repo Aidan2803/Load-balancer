@@ -1,9 +1,0 @@
-TODO:
-JSON Parser
-Proper logging + ability to turn logging on and off
-Make server to tasks that consume more time then one time respone
-Implement other load balancing algorythms  
-
-Known issues:
-1) Establishment of connection with the server on each request
-2) Race condition seem to happen in the round robin load balancer

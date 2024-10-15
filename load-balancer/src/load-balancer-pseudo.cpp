@@ -6,8 +6,6 @@ LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_n
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                             ServerInfo &server) {
-    std::lock_guard<std::mutex> load_balancer_lock_guard(load_balancer_mutex_);
-
     ClientComHandler client_handler;
 
     client_handler.AcceptClient(load_balancer_socket_wrapper);
@@ -15,8 +13,6 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
     std::string client_requst = client_handler.RecieveRequestFromClient();
 
     spdlog::info("{} Received client request: {}", instance_name_, client_requst);
-
-    server_com_handler.EstablishConnectionWithRemoteServer(server);
 
     server_com_handler.SendRequestToRemoteServer(servers_[0], client_requst);
 
@@ -35,6 +31,8 @@ void LoadBalancerServerPseudo::LoadBalancing() {
     polling_fd.events = POLLIN;
 
     int max_concurrent_tasks = thread_pool_->GetMaxThreadsAmount();
+
+    server_com_handler_.EstablishConnectionWithRemoteServer(servers_[0]);
 
     while (true) {
         try {

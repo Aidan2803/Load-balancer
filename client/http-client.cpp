@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
                 printf("Connection closed by peer.\n");
                 break;
             } 
-            printf("Received (%d bytes):\n %.*s",
+            printf("------------------------------> Received (%d bytes):\n %.*s",
                     bytes_received, bytes_received, read);
         }
     }

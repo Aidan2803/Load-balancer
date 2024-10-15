@@ -20,6 +20,7 @@ void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_han
     server_com_handler.SendRequestToRemoteServer(server, client_requst);
 
     std::string server_response = server_com_handler_.ReceiveResponseFromRemoteServer(server);
+    // at this point server-lb socket will be closed by the server
 
     client_handler.SendResponseToClient(server_response);
 
