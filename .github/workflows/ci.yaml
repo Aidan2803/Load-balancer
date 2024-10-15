@@ -21,16 +21,16 @@ jobs:
 
     - name: Build SocketWrapperLib
       working-directory: ./SocketWrapperLib
-      run: ./build_script.sh
+      run: ./scripted-build.sh.sh
 
     - name: Build Load Balancer
       working-directory: ./load-balancer
-      run: ./scripted_build.sh -f
+      run: ./scripted-build.sh -f
 
     - name: Build Server
       working-directory: ./server
-      run: ./scripted_build.sh
+      run: ./scripted-build.sh
 
     - name: Build Client
       working-directory: ./client
-      run: ./scripted_build.sh
+      run: ./scripted-build.sh
