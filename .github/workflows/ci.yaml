@@ -21,7 +21,7 @@ jobs:
 
     - name: Build SocketWrapperLib
       working-directory: ./SocketWrapperLib
-      run: ./scripted-build.sh.sh
+      run: ./scripted-build.sh
 
     - name: Build Load Balancer
       working-directory: ./load-balancer
