@@ -14,6 +14,8 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
 
     spdlog::info("{} Received client request: {}", instance_name_, client_requst);
 
+    server_com_handler_.EstablishConnectionWithRemoteServer(servers_[0]);
+
     server_com_handler.SendRequestToRemoteServer(servers_[0], client_requst);
 
     spdlog::info("{} Sent request to remote server", instance_name_);
@@ -31,8 +33,6 @@ void LoadBalancerServerPseudo::LoadBalancing() {
     polling_fd.events = POLLIN;
 
     int max_concurrent_tasks = thread_pool_->GetMaxThreadsAmount();
-
-    server_com_handler_.EstablishConnectionWithRemoteServer(servers_[0]);
 
     while (true) {
         try {
