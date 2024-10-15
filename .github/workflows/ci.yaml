@@ -1,0 +1,33 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build SocketWrapperLib
+      working-directory: ./SocketWrapperLib
+      run: ./build_script.sh
+
+    - name: Build Load Balancer
+      working-directory: ./load-balancer
+      run: ./scripted_build.sh -f
+
+    - name: Build Server
+      working-directory: ./server
+      run: ./scripted_build.sh
+
+    - name: Build Client
+      working-directory: ./client
+      run: ./scripted_build.sh
