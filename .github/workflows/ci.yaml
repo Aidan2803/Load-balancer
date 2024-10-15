@@ -1,0 +1,36 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y libspdlog-dev
+
+    - name: Build SocketWrapperLib
+      working-directory: ./SocketWrapperLib
+      run: ./scripted-build.sh
+
+    - name: Build Load Balancer
+      working-directory: ./load-balancer
+      run: ./scripted-build.sh -f
+
+    - name: Build Server
+      working-directory: ./server
+      run: ./scripted-build.sh
+
+    - name: Build Client
+      working-directory: ./client
+      run: ./scripted-build.sh
