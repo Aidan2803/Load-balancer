@@ -1,18 +1,19 @@
 #include "load-balancer-interface.hpp"
 
-LoadBalancerServerInterface::LoadBalancerServerInterface()
-    : servers_{}, backlog_size_{10}, load_balancer_socket_wrapper_{}, server_com_handler_{}, client_com_handler_{} {}
-
-void LoadBalancerServerInterface::ChechServersList() {
-    if (servers_.empty()) {
-        throw std::runtime_error("[Load-Balancer] No servers were added to the server list, can not proceed!");
-    }
-}
+LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name)
+    : servers_{},
+      backlog_size_{10},
+      load_balancer_socket_wrapper_{},
+      server_com_handler_{},
+      instance_name_{instance_name} {}
 
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
     if (servers_.empty()) {
-        throw std::runtime_error("[Load-Balancer] No available servers!");
+        spdlog::critical("{} No available servers", instance_name_);
+        throw std::runtime_error(instance_name_ + "No available servers");
     }
+
+    thread_pool_ = std::make_unique<ThreadPool>(servers_.size());
 
     struct addrinfo hints {};
     struct addrinfo* address_info;
@@ -22,21 +23,24 @@ void LoadBalancerServerInterface::StartLoadBalancerServer() {
     hints.ai_flags = AI_PASSIVE;
 
     if (getaddrinfo(NULL, port_, &hints, &address_info) != 0) {
-        throw std::runtime_error("Failed to get address info");
+        spdlog::critical("{} Failed to get address info", instance_name_);
+        throw std::runtime_error(instance_name_ + "Failed to get address info");
     }
 
     load_balancer_socket_wrapper_ =
-        std::make_unique<SocketWrapper>(address_info->ai_family, address_info->ai_socktype, address_info->ai_protocol);
+        std::make_shared<SocketWrapper>(address_info->ai_family, address_info->ai_socktype, address_info->ai_protocol);
 
-    if (bind(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), address_info->ai_addr,
+    if (bind(load_balancer_socket_wrapper_->GetSocketFileDescriptor(), address_info->ai_addr,
              address_info->ai_addrlen) == -1) {
-        throw std::runtime_error(std::string("Bind failed: ") + strerror(errno));
+        spdlog::critical("{} Bind failed: {}", instance_name_, strerror(errno));
+        throw std::runtime_error(std::string(instance_name_ + "Bind failed: ") + strerror(errno));
     }
 
     freeaddrinfo(address_info);
 
-    if (listen(load_balancer_socket_wrapper_.get()->GetSocketFileDescriptor(), backlog_size_) == -1) {
-        throw std::runtime_error(std::string("Listen failed: ") + strerror(errno));
+    if (listen(load_balancer_socket_wrapper_->GetSocketFileDescriptor(), backlog_size_) == -1) {
+        spdlog::critical("{} Listen failed: {}", instance_name_, strerror(errno));
+        throw std::runtime_error(instance_name_ + std::string("Listen failed: ") + strerror(errno));
     }
 }
 

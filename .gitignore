@@ -1,3 +1,4 @@
 load-balancer/build
 SocketWrapperLib/build
 server/build
+client/build

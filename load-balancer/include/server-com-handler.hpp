@@ -3,17 +3,19 @@
 
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string>
 #include <unordered_map>
 
 #include "SocketWrapper.hpp"
 #include "server-info.hpp"
+#include "spdlog/spdlog.h"
 
 class ServerComHandler {
   public:
     ServerComHandler();
-    ~ServerComHandler();
+    ~ServerComHandler() = default;
     void EstablishConnectionWithRemoteServer(ServerInfo &server);
     void SendRequestToRemoteServer(ServerInfo &server, std::string &request_buffer);
     std::string ReceiveResponseFromRemoteServer(ServerInfo &server);
@@ -26,7 +28,9 @@ class ServerComHandler {
         std::string &ipport_key);
 
   private:
+    std::mutex server_com_handler_mutex_;
     std::unordered_map<std::string, std::unique_ptr<SocketWrapper>> server_ipport_to_socket_map_;
+    const std::string instance_name_;
 };
 
 #endif

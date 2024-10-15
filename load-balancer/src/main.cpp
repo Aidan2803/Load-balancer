@@ -2,9 +2,13 @@
 
 #include "load-balancer-pseudo.hpp"
 #include "load-balancer-roundrobin.hpp"
+#include "spdlog/spdlog.h"
 
 int main(int agrc, char** argv) {
     signal(SIGPIPE, SIG_IGN);  // Ignore SIGPIPE
+    spdlog::set_level(spdlog::level::debug);
+
+    const std::string instance_name{"[Main]"};
 
     try {
         std::unique_ptr<LoadBalancerServerInterface> load_balancer;
@@ -15,23 +19,23 @@ int main(int agrc, char** argv) {
         if (agrc == 2) {
             switch (argv[1][0]) {
                 case '0':
-                    load_balancer = std::make_unique<LoadBalancerServerPseudo>();
+                    load_balancer = std::make_unique<LoadBalancerServerPseudo>("[LoadBalancerPseudo]");
                     break;
                 case '1':
-                    load_balancer = std::make_unique<LoadBalancerServerRoundRobin>();
+                    load_balancer = std::make_unique<LoadBalancerServerRoundRobin>("[LoadBalancerRoundRobin]");
                     break;
                 default:
                     break;
             }
         } else {
-            load_balancer = std::make_unique<LoadBalancerServerPseudo>();
+            load_balancer = std::make_unique<LoadBalancerServerPseudo>("[LoadBalancerPseudo]");
         }
 
-        load_balancer.get()->DEBUG_PushServers();
-        load_balancer.get()->StartLoadBalancerServer();
-        load_balancer.get()->LoadBalancing();
+        load_balancer->DEBUG_PushServers();
+        load_balancer->StartLoadBalancerServer();
+        load_balancer->LoadBalancing();
     } catch (const std::exception& e) {
-        std::cerr << "Fatal error: " << e.what() << std::endl;
+        spdlog::critical("{} {}", instance_name, e.what());
         return EXIT_FAILURE;
     }
 }

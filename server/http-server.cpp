@@ -9,14 +9,17 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <SocketWrapper.hpp>
+#include <random>
 
 int main(int argc, char** argv) {
+    srand(time(NULL));
     try {
         const char* port = "8080";
         if (argc >= 2) {
             port = argv[1];
         } else {
-            std::cout << "No port specified, default 8080 will be used" << std::endl;
+            std::cout << "No port specified, default 8080 will be used\n";
+            std::cout << "Random response time is set\n";
         }
 
         struct addrinfo hints{};
@@ -46,12 +49,12 @@ int main(int argc, char** argv) {
             try {
                 struct sockaddr_storage client_addr{};
                 socklen_t client_len = sizeof(client_addr);
-
+         
                 int client_fd = accept(server_socket.GetSocketFileDescriptor(), (struct sockaddr*)&client_addr, &client_len);
                 if (client_fd == -1) {
                     throw std::runtime_error(std::string("Accept failed: ") + strerror(errno));
                 }
-
+         
                 SocketWrapper client_socket(client_fd);
 
                 char request_buffer[1024];
@@ -59,6 +62,16 @@ int main(int argc, char** argv) {
                 if (bytes_received <= 0) {
                     throw std::runtime_error("Failed to receive data");
                 }
+
+                // Simulate some work that takes time
+                int response_delay = rand() % 10;
+                if (argc == 3) {
+                    response_delay = std::stoi(argv[2]);
+                    std::cout << "Response time: " << argv[2] << "\n";
+                } 
+
+                std::cout << "Delay time " << response_delay << "s \n";
+                sleep(response_delay);
 
                 const char* response =
                     "HTTP/1.1 200 OK\r\n"
@@ -69,6 +82,8 @@ int main(int argc, char** argv) {
                 ssize_t bytes_sent = send(client_socket.GetSocketFileDescriptor(), response, strlen(response), 0);
                 if (bytes_sent == -1) {
                     throw std::runtime_error(std::string("Failed to send response: ") + strerror(errno));
+                } else if (bytes_sent == 0){
+                    std::cout << "Zero bytes sent!\n";
                 }
 
                 time_t timer;
@@ -78,6 +93,8 @@ int main(int argc, char** argv) {
                 bytes_sent = send(client_socket.GetSocketFileDescriptor(), time_msg, strlen(time_msg), 0);
                 if (bytes_sent == -1) {
                     throw std::runtime_error(std::string("Failed to send time message: ") + strerror(errno));
+                } else if (bytes_sent == 0){
+                    std::cout << "Zero bytes sent!\n";
                 }
 
                 std::cout << "Sent bytes " << bytes_sent << "\n";
