@@ -1,5 +1,7 @@
 #include "server-com-handler.hpp"
 
+#include <thread>
+
 ServerComHandler::ServerComHandler() : instance_name_{"[ServerComHandler]"} {}
 
 std::string ServerComHandler::GetIpPortKeyFormat(const std::string &ip, const std::string &port) const {
@@ -48,6 +50,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
 
     auto iterator = FindSocketByIpPort(ipport);
     if (iterator) {
+        spdlog::debug("{} Will connect to {}:{}", instance_name_, server.ip_, server.port_);
         server_com_handler_mutex_.lock();
         if (connect(iterator.value()->second->GetSocketFileDescriptor(), remote_server->ai_addr,
                     remote_server->ai_addrlen) == -1) {
@@ -56,10 +59,6 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
         }
         server_com_handler_mutex_.unlock();
     }
-
-    // for (const auto &pair : server_ipport_to_socket_map_) {
-    //     spdlog::debug("IpPort: {}, Socket FD {}", pair.first, pair.second->GetSocketFileDescriptor());
-    // }
 
     freeaddrinfo(remote_server);
 }
