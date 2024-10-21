@@ -1,0 +1,1 @@
+enum class LoadBalancerMods { Pseudo = 0, RoundRobin = 1 };
