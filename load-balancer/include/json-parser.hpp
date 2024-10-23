@@ -2,10 +2,9 @@
 #include <nlohmann/json.hpp>
 
 #include "iparser.hpp"
-#include "setup-info.hpp"
 #include "spdlog/spdlog.h"
 
-class JSONParser : public IParser<std::string> {
+class JSONParser : public IParser {
     JSONParser(std::string &file_path);
     virtual SetupInfo GetSetupInfo() override;
 

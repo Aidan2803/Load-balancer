@@ -38,6 +38,4 @@ void JSONParser::ParseJSON() {
     }
 }
 
-SetupInfo JSONParser::GetSetupInfo(){
-    return setup_info_;
-};
+SetupInfo JSONParser::GetSetupInfo() { return setup_info_; };

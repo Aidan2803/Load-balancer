@@ -10,6 +10,7 @@
 
 #include "SocketWrapper.hpp"
 #include "client-com-handler.hpp"
+#include "iparser.hpp"
 #include "server-com-handler.hpp"
 #include "server-info.hpp"
 #include "spdlog/spdlog.h"
@@ -17,7 +18,8 @@
 
 class LoadBalancerServerInterface {
   public:
-    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]");
+    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]",
+                                std::unique_ptr<IParser> parser);
 
     virtual void LoadBalancing() = 0;
     virtual void HandleClient(ServerComHandler &server_com_handler,
@@ -44,6 +46,8 @@ class LoadBalancerServerInterface {
     std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;
     const std::string instance_name_;
+
+    std::unique_ptr<IParser> parser_;
 };
 
 #endif

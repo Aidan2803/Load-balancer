@@ -1,8 +1,12 @@
-template <typename T>
+#include "setup-info.hpp"
+
 class IParser {
-  protected:
-    IParser(const T& file_path) : file_path_{file_path} {}
+  public:
     virtual SetupInfo GetSetupInfo() = 0;
-    const T& file_path_;
+
+  protected:
+    IParser(const std::string& file_path) : file_path_{file_path} {}
+
+    const std::string& file_path_;
     SetupInfo setup_info_;
 };
