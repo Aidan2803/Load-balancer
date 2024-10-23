@@ -1,1 +1,1 @@
-enum class ParserTypes {JSONParser = 0, TXTParser = 1};
+enum class ParserTypes { JSONParser = 0, TXTParser = 1 };

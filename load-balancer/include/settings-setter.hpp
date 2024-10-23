@@ -1,7 +1,13 @@
-#include "load-balancer-interface.hpp"
 #include <memory>
 
-class SettingsSetter{
-    public:
-    SettingsSetter(const std::shared_ptr<LoadBalancerServerInterface> &load_balancer, int parser_type);
+#include "load-balancer-interface.hpp"
+#include "parser-types.hpp"
+
+class SettingsSetter {
+  public:
+    SettingsSetter(const std::shared_ptr<LoadBalancerServerInterface> &load_balancer, ParserTypes parser_type);
+
+  private:
+    std::shared_ptr<LoadBalancerServerInterface> load_balancer_;
+    ParserTypes parser_type_;
 };
