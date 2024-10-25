@@ -1,10 +1,12 @@
 #include <signal.h>
 
+#include "json-parser-factory.hpp"
 #include "load-balancer-pseudo.hpp"
 #include "load-balancer-roundrobin.hpp"
 #include "parser-types.hpp"
 #include "settings-setter.hpp"
 #include "spdlog/spdlog.h"
+#include "txt-parser-factory.hpp"
 
 ParserTypes AnalyzeFileType(char* file_name) {
     std::string file_name_str(file_name);
@@ -34,22 +36,17 @@ int main(int agrc, char** argv) {
         ParserTypes parser_type = AnalyzeFileType(argv[1]);
 
         std::shared_ptr<LoadBalancerServerInterface> load_balancer;
-        SettingsSetter settings_setter(load_balancer, parser_type);
+        std::shared_ptr<IParserFactroy> iparser_factory;
 
-        if (agrc == 2) {
-            switch (argv[1][0]) {
-                case '0':
-                    load_balancer = std::make_unique<LoadBalancerServerPseudo>("[LoadBalancerPseudo]");
-                    break;
-                case '1':
-                    load_balancer = std::make_unique<LoadBalancerServerRoundRobin>("[LoadBalancerRoundRobin]");
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            load_balancer = std::make_unique<LoadBalancerServerPseudo>("[LoadBalancerPseudo]");
+        if (parser_type == ParserTypes::JSONParser) {
+            iparser_factory = std::make_shared<JSONParserFactory>();
+        } else if (parser_type == ParserTypes::TXTParser) {
+            iparser_factory = std::make_shared<TXTParserFactory>();
         }
+
+        SettingsSetter settings_setter(load_balancer, iparser_factory, static_cast<std::string>(argv[1]));
+
+        settings_setter.ApplySettings();
 
         // load_balancer->DEBUG_PushServers();
 

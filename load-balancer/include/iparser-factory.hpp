@@ -1,8 +1,14 @@
-#include "iparser.hpp"
+#ifndef IPARSER_FACTORY_HPP
+#define IPARSER_FACTORY_HPP
+
 #include <memory>
 
-class IParserFactroy{
-    public:
+#include "iparser.hpp"
+
+class IParserFactroy {
+  public:
     virtual ~IParserFactroy() = default;
-    virtual std::shared_ptr<IParser> CreateParser() = 0;
+    virtual std::shared_ptr<IParser> CreateParser(const std::string& file_path) const = 0;
 };
+
+#endif

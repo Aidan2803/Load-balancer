@@ -1,7 +1,7 @@
 #include "load-balancer-pseudo.hpp"
 
-LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_name, std::unique_ptr<IParser> parser)
-    : LoadBalancerServerInterface(instance_name, std::move(parser)) {}
+LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_name)
+    : LoadBalancerServerInterface(instance_name) {}
 
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,

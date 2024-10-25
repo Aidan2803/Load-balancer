@@ -16,6 +16,7 @@ add_executable(load_balancer
     src/server-com-handler.cpp
     src/thread-pool.cpp
     src/json-parser.cpp
+    src/settings-setter.cpp
 )
 
 target_include_directories(load_balancer PRIVATE include)

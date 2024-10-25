@@ -1,3 +1,6 @@
+#ifndef IPARSER_HPP
+#define IPARSER_HPP
+
 #include "setup-info.hpp"
 
 class IParser {
@@ -10,3 +13,5 @@ class IParser {
     const std::string& file_path_;
     SetupInfo setup_info_;
 };
+
+#endif

@@ -2,14 +2,12 @@
 
 // TODO: create a parser based on the user input, 0 = json parser for now, we will see if there will be some more
 // parsers
-LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name,
-                                                         std::unique_ptr<IParser> parser)
+LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name)
     : servers_{},
       backlog_size_{10},
       load_balancer_socket_wrapper_{},
       server_com_handler_{},
-      instance_name_{instance_name},
-      parser_{std::move(parser_)} {}
+      instance_name_{instance_name} {}
 
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
     if (servers_.empty()) {

@@ -18,10 +18,14 @@
 
 class LoadBalancerServerInterface {
   public:
-    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]",
-                                std::unique_ptr<IParser> parser);
+    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]");
 
     virtual void LoadBalancing() = 0;
+
+    void SetServersInfo(std::vector<ServerInfo> servers) { servers_ = servers; }
+    void SetIsKeepAliveInfo(bool is_keep_alive) { is_keep_alive_connection_ = is_keep_alive; }
+    void SetBacklogSize(int backlog_size) { backlog_size_ = backlog_size; }
+
     virtual void HandleClient(ServerComHandler &server_com_handler,
                               std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) = 0;
     virtual void DEBUG_PushServers() = 0;
@@ -29,15 +33,14 @@ class LoadBalancerServerInterface {
     void StartLoadBalancerServer();
 
   protected:
-    void GetServersInfo();  // TODO: to be implemeted [need to get information about servers (ip, port, etc) from a JSON
-                            // file], shall have an implementation in abstract class
     void DEBUG_PushTestServer();
     void DEBUG_PushFiveTestServers();
 
   protected:
     std::vector<ServerInfo> servers_;
+    bool is_keep_alive_connection_;
 
-    const char *port_{"8090"};
+    const char *port_{"8090"};  // add this field to json parsing
     int backlog_size_;
 
     std::mutex load_balancer_mutex_;
@@ -46,8 +49,6 @@ class LoadBalancerServerInterface {
     std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper_;
     ServerComHandler server_com_handler_;
     const std::string instance_name_;
-
-    std::unique_ptr<IParser> parser_;
 };
 
 #endif

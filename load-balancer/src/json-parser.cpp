@@ -1,9 +1,8 @@
 #include "json-parser.hpp"
 
-JSONParser::JSONParser(std::string& file_path) : IParser(file_path) {}
+JSONParser::JSONParser(const std::string& file_path) : IParser(file_path) {}
 
 void JSONParser::ReadFromFile() {
-    // TODO:check if file is actually json
     std::ifstream input_file(file_path_);
 
     if (!input_file.is_open()) {
@@ -25,6 +24,10 @@ void JSONParser::ParseJSON() {
 
     if (json_data_.contains("load_balancing_is_keep_alive")) {
         setup_info_.load_balancing_is_keep_alive = json_data_["load_balancing_is_keep_alive"];
+    }
+
+    if (json_data_.contains("load_balancer_backlog_size")) {
+        setup_info_.load_balancer_backlog_size_ = json_data_["load_balancer_backlog_size"];
     }
 
     // TODO: add checks here, what if json file is incorrectly formated

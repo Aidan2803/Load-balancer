@@ -1,3 +1,6 @@
+#ifndef JSON_PARSER_HPP
+#define JSON_PARSER_HPP
+
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -5,7 +8,8 @@
 #include "spdlog/spdlog.h"
 
 class JSONParser : public IParser {
-    JSONParser(std::string &file_path);
+  public:
+    JSONParser(const std::string &file_path);
     virtual SetupInfo GetSetupInfo() override;
 
   private:
@@ -15,3 +19,5 @@ class JSONParser : public IParser {
   private:
     nlohmann::json json_data_;
 };
+
+#endif
