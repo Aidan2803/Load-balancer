@@ -8,6 +8,11 @@
 #include "spdlog/spdlog.h"
 #include "txt-parser-factory.hpp"
 
+void PrintHelp() {
+    spdlog::info("Usage:");
+    spdlog::info("./load-balancer <settings-file.json/txt>");
+}
+
 ParserTypes AnalyzeFileType(char* file_name) {
     std::string file_name_str(file_name);
 
@@ -26,13 +31,18 @@ ParserTypes AnalyzeFileType(char* file_name) {
     }
 }
 
-int main(int agrc, char** argv) {
+int main(int argc, char** argv) {
     signal(SIGPIPE, SIG_IGN);  // Ignore SIGPIPE
     spdlog::set_level(spdlog::level::debug);
 
     const std::string instance_name{"[Main]"};
 
     try {
+        if (argc < 2) {
+            PrintHelp();
+            throw(std::runtime_error("No settings file was provided!"));
+        }
+
         ParserTypes parser_type = AnalyzeFileType(argv[1]);
 
         std::shared_ptr<LoadBalancerServerInterface> load_balancer;
