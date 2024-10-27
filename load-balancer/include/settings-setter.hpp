@@ -11,7 +11,7 @@
 
 class SettingsSetter {
   public:
-    SettingsSetter(const std::shared_ptr<LoadBalancerServerInterface> &load_balancer,
+    SettingsSetter(std::shared_ptr<LoadBalancerServerInterface> &load_balancer,
                    const std::shared_ptr<IParserFactroy> &iparser_factory, const std::string &file_path);
 
     void ApplySettings();
@@ -20,7 +20,7 @@ class SettingsSetter {
     void GetSettingsFromParser();
 
   private:
-    std::shared_ptr<LoadBalancerServerInterface> load_balancer_;
+    std::shared_ptr<LoadBalancerServerInterface> &load_balancer_;
     const std::shared_ptr<IParserFactroy> iparser_factory_;
     std::shared_ptr<IParser> parser_;
     LoadBalancerCreator load_balancer_creator_;

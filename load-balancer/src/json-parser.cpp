@@ -1,6 +1,9 @@
 #include "json-parser.hpp"
 
-JSONParser::JSONParser(const std::string& file_path) : IParser(file_path) {}
+JSONParser::JSONParser(const std::string& file_path) : IParser(file_path) {
+    ReadFromFile();
+    ParseJSON();
+}
 
 void JSONParser::ReadFromFile() {
     std::ifstream input_file(file_path_);
@@ -18,8 +21,12 @@ void JSONParser::ParseJSON() {
         setup_info_.servers_amount_ = json_data_["servers_amount"];
     }
 
-    if (json_data_.contains("load_balancing_mode")) {
-        setup_info_.load_balancer_mode_ = json_data_["load_balancing_mode"];
+    if (json_data_.contains("load_balancer_mode")) {
+        if (json_data_["load_balancer_mode"] == "round_robin") {
+            setup_info_.load_balancer_mode_ = LoadBalancerMods::RoundRobin;
+        } else if (json_data_["load_balancer_mode"] == "pseudo") {
+            setup_info_.load_balancer_mode_ = LoadBalancerMods::Pseudo;
+        }
     }
 
     if (json_data_.contains("load_balancing_is_keep_alive")) {

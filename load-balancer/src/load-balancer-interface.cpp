@@ -12,7 +12,7 @@ LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& inst
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
     if (servers_.empty()) {
         spdlog::critical("{} No available servers", instance_name_);
-        throw std::runtime_error(instance_name_ + "No available servers");
+        throw std::runtime_error(instance_name_ + " No available servers");
     }
 
     thread_pool_ = std::make_unique<ThreadPool>(servers_.size());
