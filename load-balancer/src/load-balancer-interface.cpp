@@ -1,5 +1,7 @@
 #include "load-balancer-interface.hpp"
 
+// TODO: create a parser based on the user input, 0 = json parser for now, we will see if there will be some more
+// parsers
 LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name)
     : servers_{},
       backlog_size_{10},
@@ -10,7 +12,7 @@ LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& inst
 void LoadBalancerServerInterface::StartLoadBalancerServer() {
     if (servers_.empty()) {
         spdlog::critical("{} No available servers", instance_name_);
-        throw std::runtime_error(instance_name_ + "No available servers");
+        throw std::runtime_error(instance_name_ + " No available servers");
     }
 
     thread_pool_ = std::make_unique<ThreadPool>(servers_.size());

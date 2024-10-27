@@ -1,3 +1,6 @@
+#ifndef THREAD_POOL_HPP
+#define THREAD_POOL_HPP
+
 #include <condition_variable>
 #include <functional>
 #include <mutex>
@@ -34,3 +37,5 @@ class ThreadPool {
 
     const std::string instance_name_;
 };
+
+#endif

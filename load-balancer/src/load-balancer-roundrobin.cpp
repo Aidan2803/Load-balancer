@@ -6,8 +6,8 @@ LoadBalancerServerRoundRobin::LoadBalancerServerRoundRobin(const std::string &in
 void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_handler,
                                                 std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
                                                 ServerInfo &server) {
-    spdlog::info("{} Handle a client by the {}", instance_name_,
-                 std::hash<std::thread::id>{}(std::this_thread::get_id()));
+    spdlog::info("{} Handle a client by the {} {} ", instance_name_,
+                 std::hash<std::thread::id>{}(std::this_thread::get_id()), server.port_);
 
     ClientComHandler client_handler;
 
@@ -20,7 +20,6 @@ void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_han
     server_com_handler.SendRequestToRemoteServer(server, client_requst);
 
     std::string server_response = server_com_handler_.ReceiveResponseFromRemoteServer(server);
-    // at this point server-lb socket will be closed by the server
 
     client_handler.SendResponseToClient(server_response);
 
@@ -34,19 +33,27 @@ void LoadBalancerServerRoundRobin::LoadBalancing() {
 
     int server_number_iterator = 0;
     const int max_concurrent_tasks = thread_pool_->GetMaxThreadsAmount();
+    bool added_one_task = false;
+
     while (true) {
         try {
             int poll_ret = poll(&polling_fd, 1, -1);
 
-            if (poll_ret > 0 && (polling_fd.revents & POLLIN)) {
+            if (poll_ret > 0 && (polling_fd.revents & POLLIN) && !added_one_task) {
                 if (thread_pool_->GetCurrentTasksAmount() < max_concurrent_tasks) {
-                    thread_pool_->EnqueueTask([this, &server_number_iterator]() {
+                    added_one_task = true;  // Set the flag to ensure task is enqueued only once
+
+                    thread_pool_->EnqueueTask([this, &server_number_iterator, &added_one_task]() {
                         HandleClient(server_com_handler_, load_balancer_socket_wrapper_,
                                      servers_[server_number_iterator]);
                         spdlog::info("{} Current amount of tasks: {}", instance_name_,
                                      thread_pool_->GetCurrentTasksAmount());
 
                         server_number_iterator = (server_number_iterator + 1) % servers_.size();
+                        spdlog::debug("{} Server number iterator {}", instance_name_, server_number_iterator);
+
+                        // Reset the flag after task completion
+                        added_one_task = false;
                     });
                 }
             } else if (polling_fd.revents & POLLERR) {
