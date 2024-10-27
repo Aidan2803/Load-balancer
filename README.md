@@ -9,6 +9,6 @@ This repository contains <b>Load-Balancer</b> itself, <b>HTTP Client</b> and <b>
 
 ## Implemented algorithms
 Load-Balancer currently implements only two algorithms:
-<li> Pseudo - this is not actually an algorithm, this is the simplest version of Load-Balancer implementation that does not actually do load balancing, here Load-Balancer behaves like a Proxy. It accepts reuqest from client and forwards it to only server that Load-Balancer knows about.
-<li> Round-robin - forwards each request to the next server in a queue in round-robin maner, does not care about any dynamic load indicators (such as CPU load, RAM load etc.)
-This is done in multithreaded way, so Load-Balancer wont wait for each server at a time, if 3 request received at a one time and we have 3 servers available, Load-Balancer will sent all 3 request to all servers simultaneously.<br>
+<li> <b>Pseudo (Proxy)</b> - this is not actually an algorithm, this is the simplest version of Load-Balancer implementation that does not actually do load balancing, here Load-Balancer behaves like a Proxy. It accepts reuqest from client and forwards it to only server that Load-Balancer knows about.</li>
+<li> <b>Round-robin</b> - forwards each request to the next server in a queue in round-robin maner, does not care about any dynamic load indicators (such as CPU load, RAM load etc.)
+This is done in multithreaded way, so Load-Balancer wont wait for each server at a time, if 3 request received at a one time and we have 3 servers available, Load-Balancer will sent all 3 request to all servers simultaneously.<br></li>
