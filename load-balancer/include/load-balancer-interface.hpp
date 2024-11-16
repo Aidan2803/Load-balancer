@@ -27,7 +27,8 @@ class LoadBalancerServerInterface {
     void SetBacklogSize(int backlog_size) { backlog_size_ = backlog_size; }
 
     virtual void HandleClient(ServerComHandler &server_com_handler,
-                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) = 0;
+                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
+                              std::vector<ServerInfo> &servers, int server_number) = 0;
     virtual void DEBUG_PushServers() = 0;
 
     void StartLoadBalancerServer();
@@ -40,7 +41,7 @@ class LoadBalancerServerInterface {
     std::vector<ServerInfo> servers_;
     bool is_keep_alive_connection_;
 
-    const char *port_{"8090"};  // add this field to json parsing
+    const char *port_{"8090"};  // TODO: add this field to json parsing
     int backlog_size_;
 
     std::mutex load_balancer_mutex_;

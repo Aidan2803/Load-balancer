@@ -43,7 +43,7 @@ void JSONParser::ParseJSON() {
 
         for (auto& server : servers) {
             setup_info_.server_ip_port_.emplace_back(static_cast<std::string>(server["ip"]),
-                                                     static_cast<std::string>(server["port"]), false);
+                                                     static_cast<std::string>(server["port"]), true);
         }
     }
 }

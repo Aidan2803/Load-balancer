@@ -5,7 +5,7 @@ LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_n
 
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
-                                            ServerInfo &server) {
+                                            std::vector<ServerInfo> &servers, int server_number) {
     ClientComHandler client_handler;
 
     client_handler.AcceptClient(load_balancer_socket_wrapper);
@@ -14,13 +14,13 @@ void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler
 
     spdlog::info("{} Received client request: {}", instance_name_, client_requst);
 
-    server_com_handler_.EstablishConnectionWithRemoteServer(servers_[0]);
+    server_com_handler_.EstablishConnectionWithRemoteServer(servers[server_number]);
 
-    server_com_handler.SendRequestToRemoteServer(servers_[0], client_requst);
+    server_com_handler.SendRequestToRemoteServer(servers[server_number], client_requst);
 
     spdlog::info("{} Sent request to remote server", instance_name_);
 
-    std::string server_response = server_com_handler.ReceiveResponseFromRemoteServer(server);
+    std::string server_response = server_com_handler.ReceiveResponseFromRemoteServer(servers[server_number]);
 
     client_handler.SendResponseToClient(server_response);
 
@@ -40,7 +40,8 @@ void LoadBalancerServerPseudo::LoadBalancing() {
             if (poll_ret > 0 && (polling_fd.revents == POLLIN)) {
                 if (thread_pool_->GetCurrentTasksAmount() < max_concurrent_tasks) {
                     thread_pool_->EnqueueTask(
-                        [this]() { HandleClient(server_com_handler_, load_balancer_socket_wrapper_, servers_[0]); });
+                        // 0 is the first and only server in the servers vector
+                        [this]() { HandleClient(server_com_handler_, load_balancer_socket_wrapper_, servers_, 0); });
                 }
             } else if (polling_fd.revents & POLLERR) {
                 int err = 0;

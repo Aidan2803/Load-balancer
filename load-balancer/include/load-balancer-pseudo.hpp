@@ -10,7 +10,8 @@ class LoadBalancerServerPseudo : public LoadBalancerServerInterface {
     LoadBalancerServerPseudo(const std::string &instance_name);
     virtual void LoadBalancing() override;
     virtual void HandleClient(ServerComHandler &server_com_handler,
-                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) override;
+                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
+                              std::vector<ServerInfo> &servers, int server_number) override;
     virtual void DEBUG_PushServers() override;
 };
 
