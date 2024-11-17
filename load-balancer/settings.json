@@ -15,5 +15,7 @@
         }
     ],
     "load_balancer_mode": "round_robin",
+    "load_balancer_ip": "127.0.0.1",
+    "load_balancer_port": "8090",
     "LoadBalancingIsKeepAlive": true
 }

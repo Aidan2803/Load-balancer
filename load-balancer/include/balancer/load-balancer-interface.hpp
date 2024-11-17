@@ -18,7 +18,7 @@
 
 class LoadBalancerServerInterface {
   public:
-    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]");
+    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]", const std::string &ip = "127.0.0.1", const std::string &port = "8090");
 
     virtual void LoadBalancing() = 0;
 
@@ -41,7 +41,8 @@ class LoadBalancerServerInterface {
     std::vector<ServerInfo> servers_;
     bool is_keep_alive_connection_;
 
-    const char *port_{"8090"};  // TODO: add this field to json parsing
+    const std::string ip_;
+    const std::string port_;
     int backlog_size_;
 
     std::mutex load_balancer_mutex_;

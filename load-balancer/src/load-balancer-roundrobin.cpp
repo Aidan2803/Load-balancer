@@ -1,7 +1,10 @@
 #include "balancer/load-balancer-roundrobin.hpp"
 
-LoadBalancerServerRoundRobin::LoadBalancerServerRoundRobin(const std::string &instance_name)
-    : LoadBalancerServerInterface(instance_name) {}
+LoadBalancerServerRoundRobin::LoadBalancerServerRoundRobin(const std::string &instance_name, const std::string &ip,
+                                                           const std::string &port)
+    : LoadBalancerServerInterface(instance_name, ip, port) {
+    spdlog::info("{} Starting load-balancer at {}:{}", instance_name_, ip, port);
+}
 
 void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_handler,
                                                 std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,

@@ -16,6 +16,8 @@ void JSONParser::ReadFromFile() {
     input_file.close();
 }
 
+// TODO: add checks here, what if json file is incorrectly formated
+// TODO: make cheks, make cheks for valid ip:port for load-balancer and servers
 void JSONParser::ParseJSON() {
     if (json_data_.contains("servers_amount")) {
         setup_info_.servers_amount_ = json_data_["servers_amount"];
@@ -29,6 +31,14 @@ void JSONParser::ParseJSON() {
         }
     }
 
+    if (json_data_.contains("load_balancer_ip")) {
+        setup_info_.load_balancer_ip_ = json_data_["load_balancer_ip"];
+    }
+
+    if (json_data_.contains("load_balancer_port")) {
+        setup_info_.load_balancer_port_ = json_data_["load_balancer_port"];
+    }
+
     if (json_data_.contains("load_balancing_is_keep_alive")) {
         setup_info_.load_balancing_is_keep_alive = json_data_["load_balancing_is_keep_alive"];
     }
@@ -37,7 +47,6 @@ void JSONParser::ParseJSON() {
         setup_info_.load_balancer_backlog_size_ = json_data_["load_balancer_backlog_size"];
     }
 
-    // TODO: add checks here, what if json file is incorrectly formated
     if (json_data_.contains("servers")) {
         const auto& servers = json_data_["servers"];
 

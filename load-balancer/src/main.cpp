@@ -6,7 +6,7 @@
 #include "parser/parser-types.hpp"
 #include "parser/txt-parser-factory.hpp"
 #include "spdlog/spdlog.h"
-#include "utility/settup/settings-setter.hpp"
+#include "utility/setup/settings-setter.hpp"
 
 void PrintHelp() {
     spdlog::info("Usage:");

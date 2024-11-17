@@ -2,8 +2,11 @@
 
 // TODO: create a parser based on the user input, 0 = json parser for now, we will see if there will be some more
 // parsers
-LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name)
+LoadBalancerServerInterface::LoadBalancerServerInterface(const std::string& instance_name, const std::string& ip,
+                                                         const std::string& port)
     : servers_{},
+      ip_{ip},
+      port_{port},
       backlog_size_{10},
       load_balancer_socket_wrapper_{},
       server_com_handler_{},
@@ -24,7 +27,7 @@ void LoadBalancerServerInterface::StartLoadBalancerServer() {
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 
-    if (getaddrinfo(NULL, port_, &hints, &address_info) != 0) {
+    if (getaddrinfo(NULL, port_.c_str(), &hints, &address_info) != 0) {
         spdlog::critical("{} Failed to get address info", instance_name_);
         throw std::runtime_error(instance_name_ + "Failed to get address info");
     }

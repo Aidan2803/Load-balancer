@@ -4,10 +4,10 @@
 #include <memory>
 
 #include "parser/iparser-factory.hpp"
-#include "utility/settup/load-balancer-creator.hpp"
-#include "utility/settup/load-balancer-mods.hpp"
+#include "utility/setup/load-balancer-creator.hpp"
+#include "utility/setup/load-balancer-mods.hpp"
 #include "parser/parser-types.hpp"
-#include "utility/settup/setup-info.hpp"
+#include "utility/setup/setup-info.hpp"
 
 class SettingsSetter {
   public:
