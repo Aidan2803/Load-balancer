@@ -3,11 +3,11 @@
 
 #include <memory>
 
-#include "iparser-factory.hpp"
-#include "load-balancer-creator.hpp"
-#include "load-balancer-mods.hpp"
-#include "parser-types.hpp"
-#include "setup-info.hpp"
+#include "parser/iparser-factory.hpp"
+#include "utility/setup/load-balancer-creator.hpp"
+#include "utility/setup/load-balancer-mods.hpp"
+#include "parser/parser-types.hpp"
+#include "utility/setup/setup-info.hpp"
 
 class SettingsSetter {
   public:

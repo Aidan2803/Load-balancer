@@ -1,7 +1,7 @@
 #ifndef IPARSER_HPP
 #define IPARSER_HPP
 
-#include "setup-info.hpp"
+#include "utility/setup/setup-info.hpp"
 
 class IParser {
   public:

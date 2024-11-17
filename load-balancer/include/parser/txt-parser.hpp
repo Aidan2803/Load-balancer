@@ -1,7 +1,7 @@
 #ifndef TXT_PARSER_HPP
 #define TXT_PARSER_HPP
 
-#include "iparser.hpp"
+#include "parser/iparser.hpp"
 
 class TXTParser : public IParser {
   public:

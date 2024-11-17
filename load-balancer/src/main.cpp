@@ -1,12 +1,12 @@
 #include <signal.h>
 
-#include "json-parser-factory.hpp"
-#include "load-balancer-pseudo.hpp"
-#include "load-balancer-roundrobin.hpp"
-#include "parser-types.hpp"
-#include "settings-setter.hpp"
+#include "balancer/load-balancer-pseudo.hpp"
+#include "balancer/load-balancer-roundrobin.hpp"
+#include "parser/json-parser-factory.hpp"
+#include "parser/parser-types.hpp"
+#include "parser/txt-parser-factory.hpp"
 #include "spdlog/spdlog.h"
-#include "txt-parser-factory.hpp"
+#include "utility/setup/settings-setter.hpp"
 
 void PrintHelp() {
     spdlog::info("Usage:");

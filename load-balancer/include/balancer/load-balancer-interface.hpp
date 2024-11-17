@@ -9,16 +9,16 @@
 #include <vector>
 
 #include "SocketWrapper.hpp"
-#include "client-com-handler.hpp"
-#include "iparser.hpp"
-#include "server-com-handler.hpp"
-#include "server-info.hpp"
+#include "balancer/client-com-handler.hpp"
+#include "parser/iparser.hpp"
+#include "balancer/server-com-handler.hpp"
+#include "balancer/server-info.hpp"
 #include "spdlog/spdlog.h"
-#include "thread-pool.hpp"
+#include "utility/thread-pool.hpp"
 
 class LoadBalancerServerInterface {
   public:
-    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]");
+    LoadBalancerServerInterface(const std::string &instance_name = "[LoadBalancerServerInterface]", const std::string &ip = "127.0.0.1", const std::string &port = "8090");
 
     virtual void LoadBalancing() = 0;
 
@@ -27,7 +27,8 @@ class LoadBalancerServerInterface {
     void SetBacklogSize(int backlog_size) { backlog_size_ = backlog_size; }
 
     virtual void HandleClient(ServerComHandler &server_com_handler,
-                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper, ServerInfo &server) = 0;
+                              std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
+                              std::vector<ServerInfo> &servers, int server_number) = 0;
     virtual void DEBUG_PushServers() = 0;
 
     void StartLoadBalancerServer();
@@ -40,7 +41,8 @@ class LoadBalancerServerInterface {
     std::vector<ServerInfo> servers_;
     bool is_keep_alive_connection_;
 
-    const char *port_{"8090"};  // add this field to json parsing
+    const std::string ip_;
+    const std::string port_;
     int backlog_size_;
 
     std::mutex load_balancer_mutex_;

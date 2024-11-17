@@ -1,4 +1,4 @@
-#include "server-com-handler.hpp"
+#include "balancer/server-com-handler.hpp"
 
 #include <thread>
 
@@ -48,6 +48,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
 
     server.is_available_ = true;
 
+    spdlog::debug("{} Will search for {}:{} socket", instance_name_, server.ip_, server.port_);
     auto iterator = FindSocketByIpPort(ipport);
     if (iterator) {
         spdlog::debug("{} Will connect to {}:{}", instance_name_, server.ip_, server.port_);
@@ -58,6 +59,8 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
             server.is_available_ = false;
         }
         server_com_handler_mutex_.unlock();
+    } else {
+        spdlog::warn("{} Socket for {}:{} does not exist, can not connect", instance_name_, server.ip_, server.port_);
     }
 
     freeaddrinfo(remote_server);

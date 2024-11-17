@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 #include "SocketWrapper.hpp"
-#include "server-info.hpp"
+#include "balancer/server-info.hpp"
 #include "spdlog/spdlog.h"
 
 class ServerComHandler {

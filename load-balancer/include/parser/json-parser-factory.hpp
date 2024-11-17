@@ -1,8 +1,8 @@
 #ifndef JSON_PARSER_FACTORY_HPP
 #define JSON_PARSER_FACTORY_HPP
 
-#include "iparser-factory.hpp"
-#include "json-parser.hpp"
+#include "parser/iparser-factory.hpp"
+#include "parser/json-parser.hpp"
 
 class JSONParserFactory : public IParserFactroy {
   public:
