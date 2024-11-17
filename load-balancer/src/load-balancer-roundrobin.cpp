@@ -1,4 +1,4 @@
-#include "load-balancer-roundrobin.hpp"
+#include "balancer/load-balancer-roundrobin.hpp"
 
 LoadBalancerServerRoundRobin::LoadBalancerServerRoundRobin(const std::string &instance_name)
     : LoadBalancerServerInterface(instance_name) {}
@@ -47,7 +47,7 @@ void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_han
         client_handler.SendResponseToClient(server_response);
 
         client_handler.CloseClientSocket();
-    } else{
+    } else {
         // TODO: send client an error code since connection with the client is already established
     }
 }

@@ -1,4 +1,4 @@
-#include "json-parser.hpp"
+#include "parser/json-parser.hpp"
 
 JSONParser::JSONParser(const std::string& file_path) : IParser(file_path) {
     ReadFromFile();

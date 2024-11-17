@@ -4,7 +4,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-#include "iparser.hpp"
+#include "parser/iparser.hpp"
 #include "spdlog/spdlog.h"
 
 class JSONParser : public IParser {

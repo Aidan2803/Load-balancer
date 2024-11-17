@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "load-balancer-mods.hpp"
-#include "server-info.hpp"
+#include "utility/settup/load-balancer-mods.hpp"
+#include "balancer/server-info.hpp"
 
 struct SetupInfo {
     SetupInfo()

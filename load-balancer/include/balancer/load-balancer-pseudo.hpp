@@ -3,7 +3,7 @@
 
 #include <poll.h>
 
-#include "load-balancer-interface.hpp"
+#include "balancer/load-balancer-interface.hpp"
 
 class LoadBalancerServerPseudo : public LoadBalancerServerInterface {
   public:

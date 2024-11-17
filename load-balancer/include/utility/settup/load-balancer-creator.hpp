@@ -4,8 +4,8 @@
 #include <memory>
 
 #include "load-balancer-mods.hpp"
-#include "load-balancer-pseudo.hpp"
-#include "load-balancer-roundrobin.hpp"
+#include "balancer/load-balancer-pseudo.hpp"
+#include "balancer/load-balancer-roundrobin.hpp"
 
 class LoadBalancerCreator {
   public:

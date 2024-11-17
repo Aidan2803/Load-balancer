@@ -9,12 +9,12 @@
 #include <vector>
 
 #include "SocketWrapper.hpp"
-#include "client-com-handler.hpp"
-#include "iparser.hpp"
-#include "server-com-handler.hpp"
-#include "server-info.hpp"
+#include "balancer/client-com-handler.hpp"
+#include "parser/iparser.hpp"
+#include "balancer/server-com-handler.hpp"
+#include "balancer/server-info.hpp"
 #include "spdlog/spdlog.h"
-#include "thread-pool.hpp"
+#include "utility/thread-pool.hpp"
 
 class LoadBalancerServerInterface {
   public:

@@ -1,4 +1,4 @@
-#include "server-com-handler.hpp"
+#include "balancer/server-com-handler.hpp"
 
 #include <thread>
 
@@ -60,7 +60,7 @@ void ServerComHandler::EstablishConnectionWithRemoteServer(ServerInfo &server) {
         }
         server_com_handler_mutex_.unlock();
     } else {
-        // TODO: what if no such server?
+        spdlog::warn("{} Socket for {}:{} does not exist, can not connect", instance_name_, server.ip_, server.port_);
     }
 
     freeaddrinfo(remote_server);

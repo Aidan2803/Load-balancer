@@ -1,4 +1,4 @@
-#include "client-com-handler.hpp"
+#include "balancer/client-com-handler.hpp"
 
 ClientComHandler::ClientComHandler() : instance_name_{"[ClientHandler]"} {}
 

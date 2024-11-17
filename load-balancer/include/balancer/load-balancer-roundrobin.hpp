@@ -5,7 +5,7 @@
 
 #include <atomic>
 
-#include "load-balancer-interface.hpp"
+#include "balancer/load-balancer-interface.hpp"
 
 class LoadBalancerServerRoundRobin : public LoadBalancerServerInterface {
   public:

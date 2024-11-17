@@ -1,4 +1,4 @@
-#include "load-balancer-pseudo.hpp"
+#include "balancer/load-balancer-pseudo.hpp"
 
 LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_name)
     : LoadBalancerServerInterface(instance_name) {}

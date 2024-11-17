@@ -1,4 +1,4 @@
-#include "load-balancer-interface.hpp"
+#include "balancer/load-balancer-interface.hpp"
 
 // TODO: create a parser based on the user input, 0 = json parser for now, we will see if there will be some more
 // parsers
