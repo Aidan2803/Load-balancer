@@ -51,7 +51,11 @@ void LoadBalancerServerRoundRobin::HandleClient(ServerComHandler &server_com_han
 
         client_handler.CloseClientSocket();
     } else {
-        // TODO: send client an error code since connection with the client is already established
+        std::string failed_connect_with_server_response("Failed: could not connect to server!\n");
+
+        client_handler.SendResponseToClient(failed_connect_with_server_response);
+
+        client_handler.CloseClientSocket();
     }
 }
 

@@ -50,6 +50,12 @@ void JSONParser::ParseJSON() {
     if (json_data_.contains("servers")) {
         const auto& servers = json_data_["servers"];
 
+        if (setup_info_.load_balancer_mode_ == LoadBalancerMods::Pseudo) {
+            setup_info_.servers_amount_ = 1;
+            setup_info_.server_ip_port_.emplace_back(static_cast<std::string>(servers[0]["ip"]),
+                                                     static_cast<std::string>(servers[0]["port"]), true);
+        }
+
         for (auto& server : servers) {
             setup_info_.server_ip_port_.emplace_back(static_cast<std::string>(server["ip"]),
                                                      static_cast<std::string>(server["port"]), true);

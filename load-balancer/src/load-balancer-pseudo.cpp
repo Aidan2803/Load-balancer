@@ -2,7 +2,9 @@
 
 LoadBalancerServerPseudo::LoadBalancerServerPseudo(const std::string &instance_name, const std::string &ip,
                                                    const std::string &port)
-    : LoadBalancerServerInterface(instance_name, ip, port) {}
+    : LoadBalancerServerInterface(instance_name, ip, port) {
+    spdlog::info("{} Starting load-balancer at {}:{}", instance_name_, ip, port);
+}
 
 void LoadBalancerServerPseudo::HandleClient(ServerComHandler &server_com_handler,
                                             std::shared_ptr<SocketWrapper> load_balancer_socket_wrapper,
