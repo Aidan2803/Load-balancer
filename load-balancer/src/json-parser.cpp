@@ -1,8 +1,12 @@
 #include "parser/json-parser.hpp"
 
 JSONParser::JSONParser(const std::string& file_path) : IParser(file_path) {
-    ReadFromFile();
-    ParseJSON();
+    try {
+        ReadFromFile();
+        ParseJSON();
+    } catch (std::exception& e) {
+        throw;
+    }
 }
 
 void JSONParser::ReadFromFile() {
@@ -28,6 +32,9 @@ void JSONParser::ParseJSON() {
             setup_info_.load_balancer_mode_ = LoadBalancerMods::RoundRobin;
         } else if (json_data_["load_balancer_mode"] == "pseudo") {
             setup_info_.load_balancer_mode_ = LoadBalancerMods::Pseudo;
+        } else {
+            throw std::runtime_error(
+                std::string("Unknwon load-balancer mode " + std::string(json_data_["load_balancer_mode"])));
         }
     }
 
