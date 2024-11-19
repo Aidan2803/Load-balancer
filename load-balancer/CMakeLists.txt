@@ -9,14 +9,14 @@ find_package(nlohmann_json REQUIRED)
 
 add_executable(load_balancer 
     src/main.cpp
-    src/load-balancer-interface.cpp
-    src/load-balancer-pseudo.cpp
-    src/load-balancer-roundrobin.cpp
-    src/client-com-handler.cpp
-    src/server-com-handler.cpp
-    src/thread-pool.cpp
-    src/json-parser.cpp
-    src/settings-setter.cpp
+    src/balancer/load-balancer-interface.cpp
+    src/balancer/load-balancer-pseudo.cpp
+    src/balancer/load-balancer-roundrobin.cpp
+    src/balancer/client-com-handler.cpp
+    src/balancer/server-com-handler.cpp
+    src/utility/thread-pool.cpp
+    src/parser/json-parser.cpp
+    src/utility/setup/settings-setter.cpp
 )
 
 target_include_directories(load_balancer PRIVATE include)
